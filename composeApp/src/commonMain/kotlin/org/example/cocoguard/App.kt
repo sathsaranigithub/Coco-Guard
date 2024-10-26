@@ -1,11 +1,10 @@
 package org.example.cocoguard
 
-import androidx.compose.animation.AnimatedVisibility
+import RegisterPage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
@@ -15,15 +14,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.Font
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.ButtonDefaults
 import androidx.navigation.NavController
@@ -31,46 +25,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.compose_multiplatform
 import cocoguard.composeapp.generated.resources.mainimage
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.unit.dp
-import cocoguard.composeapp.generated.resources.lemonada
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.FontResource
-
-
-// Composable function to define the font family
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun lemonadaFontFamily(): FontFamily {
-    return FontFamily(
-        Font(Res.font.lemonada, FontWeight.Bold)
-    )
-}
-// Define Custom TextStyle for the Heading inside a @Composable function
-@Composable
-fun headingTextStyle(): TextStyle {
-    return TextStyle(
-        fontFamily = lemonadaFontFamily(),
-        fontSize = 42.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color(0xFFBAEC6F) // Text color in hexadecimal
-    )
-}
-// Define Custom TextStyle for the Subheading
-@Composable
-fun subHeadingTextStyle(): TextStyle {
-    return TextStyle(
-        fontFamily = lemonadaFontFamily(),
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Normal,
-        color = Color(0xFFF5FFE2) ,// Same text color as the heading
-    )
-}
+import org.example.cocoguard.auth.LoginPage
+import org.example.cocoguard.ui.theme.headingTextStyle
+import org.example.cocoguard.ui.theme.lemonadaFontFamily
+import org.example.cocoguard.ui.theme.subHeadingTextStyle
 
 @Composable
-// Main Screen Composable with navigation
+
 fun App() {
     val navController = rememberNavController() // Navigation controller
 
@@ -78,16 +41,24 @@ fun App() {
         // Home screen route
         composable("home") { HomeScreen(navController) }
         // Login page route
-        composable("login") { LoginPage() }
+        composable("login") {
+            LoginPage(
+                onNavigateToRegister = { navController.navigate("register") }
+            )
+        }
+        // Register page route
+        composable("register") { RegisterPage(
+            onNavigateToLogin = { navController.navigate("login") }
+        ) }
     }
 }
 
-// Home screen composable where the "Get Started" button is located
+
 @Composable
 fun HomeScreen(navController: NavController) {
     MaterialTheme {
         Box(
-            modifier = Modifier.fillMaxSize() // Fill the entire screen
+            modifier = Modifier.fillMaxSize()
         ) {
             // Background Image
             Image(
@@ -107,7 +78,7 @@ fun HomeScreen(navController: NavController) {
                     text = "Coco Guard",
                     style = headingTextStyle(),
                     modifier = Modifier
-                        .padding(bottom = 8.dp) // Add some spacing between the heading and subheading
+                        .padding(bottom = 8.dp, start = 15.dp) // Add some spacing between the heading and subheading
                 )
 
                 // Subheading Text
