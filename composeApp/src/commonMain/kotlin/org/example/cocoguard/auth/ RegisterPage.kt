@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
@@ -72,7 +73,9 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
                     color = Color.Black,
                     textAlign = TextAlign.Center
                 ),
-                modifier = Modifier.padding(bottom = 40.dp).align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .padding(bottom = 40.dp)
+                    .align(Alignment.CenterHorizontally)
             )
 
             Text(
@@ -87,58 +90,71 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
                 modifier = Modifier.padding(bottom = 20.dp)
             )
 
-            TextField(
-                value = "",
-                onValueChange = { /* Handle email input */ },
-                label = { Text("E-mail") },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
+            Card(
+                shape = RoundedCornerShape(10.dp),
+                elevation = 4.dp,
                 modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-
-            TextField(
-                value = "",
-                onValueChange = { /* Handle password input */ },
-                label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-
-            TextField(
-                value = "",
-                onValueChange = { /* Handle confirm password input */ },
-                label = { Text("Confirm Password") },
-                visualTransformation = PasswordVisualTransformation(),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Button(
-                onClick = { /* Handle registration action */ },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .padding(vertical = 10.dp)
             ) {
-                Text(
-                    text = "Register",
-                    color = Color.White,
-                    style = TextStyle(fontSize = 18.sp)
-                )
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TextField(
+                        value = "",
+                        onValueChange = { /* Handle username input */ },
+                        label = { Text("User name") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            textColor = Color.Black
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    TextField(
+                        value = "",
+                        onValueChange = { /* Handle email input */ },
+                        label = { Text("E-mail") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            textColor = Color.Black
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    TextField(
+                        value = "",
+                        onValueChange = { /* Handle password input */ },
+                        label = { Text("Password") },
+                        visualTransformation = PasswordVisualTransformation(),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            textColor = Color.Black
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Button(
+                        onClick = { /* Handle registration action */ },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .padding(vertical = 10.dp)
+                    ) {
+                        Text(
+                            text = "Register",
+                            color = Color.White,
+                            style = TextStyle(fontSize = 18.sp)
+                        )
+                    }
+                }
             }
+
             Spacer(modifier = Modifier.height(30.dp))
 
             Image(
@@ -160,8 +176,8 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
             )
 
             TextButton(
-                onClick = onNavigateToLogin, // Navigate back to LoginPage
-                modifier = Modifier.padding(bottom = 30.dp)
+                onClick = onNavigateToLogin,
+                modifier = Modifier.padding(bottom = 5.dp)
             ) {
                 Text(
                     text = "Already have an account? Login",

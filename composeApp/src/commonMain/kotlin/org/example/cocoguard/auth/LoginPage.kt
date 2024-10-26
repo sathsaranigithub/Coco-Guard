@@ -5,7 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+
+
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +24,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +45,8 @@ import org.jetbrains.compose.resources.FontResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun LoginPage(onNavigateToRegister: () -> Unit) {
+fun LoginPage(onNavigateToRegister: () -> Unit,onNavigateToHome: () -> Unit) {
+    // Background setup with an image
     // Background setup with an image
     Row(
         modifier = Modifier
@@ -56,7 +65,6 @@ fun LoginPage(onNavigateToRegister: () -> Unit) {
 
         // Content aligned to the right
         Column(
-
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -74,7 +82,7 @@ fun LoginPage(onNavigateToRegister: () -> Unit) {
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 ),
-                modifier = Modifier.padding(bottom = 40.dp) .align(Alignment.CenterHorizontally)
+                modifier = Modifier.padding(bottom = 40.dp).align(Alignment.CenterHorizontally)
             )
 
             // Subheading Text
@@ -90,47 +98,69 @@ fun LoginPage(onNavigateToRegister: () -> Unit) {
                 modifier = Modifier.padding(bottom = 20.dp)
             )
 
-            // Email TextField
-            TextField(
-                value = "",
-                onValueChange = { /* Handle email input */ },
-                label = { Text("E-mail") },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
+            // Card for Email, Password, and Login Button
+            Card(
+                shape = RoundedCornerShape(10.dp),
+                elevation = 4.dp,
                 modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Password TextField
-            TextField(
-                value = "",
-                onValueChange = { /* Handle password input */ },
-                label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Login Button
-            Button(
-                onClick = { /* Handle login action */ },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)), // Set to green
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .padding(vertical = 10.dp)
             ) {
-                Text(
-                    text = "Login",
-                    color = Color.White,
-                    style = TextStyle(fontSize = 18.sp)
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp) // Padding inside the card
+                ) {
+                    // Email TextField
+                    TextField(
+                        value = "",
+                        onValueChange = { /* Handle email input */ },
+                        label = { Text("E-mail") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            textColor = Color.Black
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // Password TextField with toggle icon
+                    var passwordVisible by remember { mutableStateOf(false) }
+                    TextField(
+                        value = "",
+                        onValueChange = { /* Handle password input */ },
+                        label = { Text("Password") },
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+//                        trailingIcon = {
+//                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+//                                Icon(
+//                                    imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+//                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
+//                                )
+//                            }
+//                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            textColor = Color.Black
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Login Button
+                    Button(
+                        onClick = onNavigateToHome,
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)), // Set to green
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .padding(vertical = 10.dp)
+                    ) {
+                        Text(
+                            text = "Login",
+                            color = Color.White,
+                            style = TextStyle(fontSize = 18.sp)
+                        )
+                    }
+                }
             }
             Spacer(modifier = Modifier.height(30.dp)) // Space between button and logo
 
@@ -156,9 +186,8 @@ fun LoginPage(onNavigateToRegister: () -> Unit) {
             // Register Link
             TextButton(
                 onClick = onNavigateToRegister, // Navigate to RegisterPage
-                modifier = Modifier.padding(bottom = 30.dp)
-            )
-            {
+                modifier = Modifier.padding(bottom = 5.dp)
+            ) {
                 Text(
                     text = "Don't have an account? Register",
                     style = TextStyle(
@@ -168,8 +197,7 @@ fun LoginPage(onNavigateToRegister: () -> Unit) {
                         textAlign = TextAlign.Center
                     ),
                     modifier = Modifier.padding(top = 30.dp)
-                    )
-
+                )
             }
         }
     }

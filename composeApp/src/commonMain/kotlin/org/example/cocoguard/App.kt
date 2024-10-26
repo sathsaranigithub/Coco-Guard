@@ -1,6 +1,7 @@
 package org.example.cocoguard
 
 import RegisterPage
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,34 +31,38 @@ import cocoguard.composeapp.generated.resources.Res
 import cocoguard.composeapp.generated.resources.mainimage
 import androidx.compose.ui.unit.dp
 import org.example.cocoguard.auth.LoginPage
+import org.example.cocoguard.screens.HomeScreen
 import org.example.cocoguard.ui.theme.headingTextStyle
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.subHeadingTextStyle
+
 
 @Composable
 
 fun App() {
     val navController = rememberNavController() // Navigation controller
 
-    NavHost(navController = navController, startDestination = "home") {
-        // Home screen route
-        composable("home") { HomeScreen(navController) }
+    NavHost(navController = navController, startDestination = "onboard") {
+        composable("onboard") { OnboardScreen(navController) }
         // Login page route
         composable("login") {
             LoginPage(
-                onNavigateToRegister = { navController.navigate("register") }
+                onNavigateToRegister = { navController.navigate("register") },
+                onNavigateToHome ={navController.navigate("home")}
             )
         }
         // Register page route
         composable("register") { RegisterPage(
             onNavigateToLogin = { navController.navigate("login") }
         ) }
+        composable("home") { HomeScreen() }
+
     }
 }
 
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun OnboardScreen(navController: NavController) {
     MaterialTheme {
         Box(
             modifier = Modifier.fillMaxSize()
