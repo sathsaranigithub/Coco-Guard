@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.navigation.NavController
 import cocoguard.composeapp.generated.resources.Res
 import cocoguard.composeapp.generated.resources.cardone
 import cocoguard.composeapp.generated.resources.cardthree
@@ -32,7 +33,7 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
 
         // Non-scrollable main green card at the top
@@ -104,10 +105,11 @@ fun HomeScreen() {
 
         // List of images, titles, and descriptions
         val cardData = listOf(
-            Triple(Res.drawable.cardone, "Disease Detection", "Image processing for real-time coconut tree diseases identification and recommended treatment for disease"),
-            Triple(Res.drawable.cardtwo, "Demand Forecasting", "Detect coconut diseases early with AI-driven tools."),
-            Triple(Res.drawable.cardthree, "Yield Prediction", "Predict coconut yield accurately to enhance productivity.")
+            Pair(Triple(Res.drawable.cardone, "Disease Detection", "Image processing for real-time coconut tree diseases identification and recommended treatment for disease"), "imageUpload"),
+            Pair(Triple(Res.drawable.cardtwo, "Demand Forecasting", "Detect coconut diseases early with AI-driven tools."), "forecastingQuestion"),
+            Pair(Triple(Res.drawable.cardthree, "Yield Prediction", "Predict coconut yield accurately to enhance productivity."), "yieldQuestion")
         )
+
 
         // Scrollable content with image cards
         LazyColumn(
@@ -117,11 +119,13 @@ fun HomeScreen() {
                 .padding(top = 16.dp) // Optional padding between green card and scrollable content
         ) {
             items(cardData.size) { index ->
-                val (imageRes, title, description) = cardData[index]
+                val (cardInfo, route) = cardData[index]
+                val (imageRes, title, description) = cardInfo
                 ImageCard(
                     imageRes = imageRes,
                     title = title,
-                    description = description
+                    description = description,
+                    onClick = { navController.navigate(route) }
                 )
             }
         }
@@ -129,7 +133,7 @@ fun HomeScreen() {
 }
 
 @Composable
-fun ImageCard(imageRes: DrawableResource, title: String, description: String) {
+fun ImageCard(imageRes: DrawableResource, title: String, description: String,onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -169,7 +173,7 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { /* Handle button click */ },
+                    onClick = onClick,
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                     modifier = Modifier.align(Alignment.Start)
                 ) {

@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import org.example.cocoguard.auth.LoginPage
 import org.example.cocoguard.screens.HomeScreen
 import org.example.cocoguard.screens.OnboardScreen
+import org.example.cocoguard.screens.disease.ImageUploadScreen
 
 
 @Composable
@@ -28,7 +29,11 @@ fun AppNavigation(navController: NavHostController) {
             RegisterPage(onNavigateToLogin = { navController.navigate("login") })
         }
 
-        composable("home") { HomeScreen() }
+        composable("home") { HomeScreen(navController) }
+
+        composable("imageUpload") {ImageUploadScreen() }
+        composable("forecastingQuestion") { /* ForecastingQuestionScreen() */ }
+        composable("yieldQuestion") { /* YieldQuestionScreen() */ }
     }
 }
 
