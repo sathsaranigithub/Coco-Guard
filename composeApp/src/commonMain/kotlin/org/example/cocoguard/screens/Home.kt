@@ -137,16 +137,24 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String) {
         shape = RoundedCornerShape(16.dp),
         elevation = 4.dp
     ) {
-        Column {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            // Image taking half of the screen width
             Image(
                 painter = painterResource(imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(0.5f)
                     .height(180.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
             )
-            Column(modifier = Modifier.padding(16.dp)) {
+
+            // Text and Button content taking the other half
+            Column(
+                modifier = Modifier
+                    .weight(0.5f)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
                     text = title,
                     fontSize = 18.sp,
@@ -162,7 +170,8 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = { /* Handle button click */ },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50))
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    modifier = Modifier.align(Alignment.Start)
                 ) {
                     Text(text = "Get Start", color = Color.White)
                 }
