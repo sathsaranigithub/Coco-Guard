@@ -45,10 +45,10 @@ fun YieldRecordScreen() {
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = Color.White)) {
-                        append("Coconut yield\n")
+                        append("Coconut Yield\n")
                     }
                     withStyle(style = SpanStyle(color = Color(0xFF4CAF50))) {
-                        append("Record history")
+                        append("Record History")
                     }
                 },
                 fontSize = 30.sp,

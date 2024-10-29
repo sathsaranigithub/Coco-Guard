@@ -11,6 +11,8 @@ import org.example.cocoguard.auth.LoginPage
 import org.example.cocoguard.screens.HomeScreen
 import org.example.cocoguard.screens.OnboardScreen
 import org.example.cocoguard.screens.disease.ImageUploadScreen
+import org.example.cocoguard.screens.forecasting.ForecastingQuestionScreen
+import org.example.cocoguard.screens.forecasting.ForecastingRecordScreen
 import org.example.cocoguard.screens.yield.YieldQuestionScreen
 import org.example.cocoguard.screens.yield.YieldRecordScreen
 
@@ -33,9 +35,10 @@ fun AppNavigation(navController: NavHostController) {
 
         composable("home") { HomeScreen(navController) }
         composable("imageUpload") {ImageUploadScreen() }
-        composable("forecastingQuestion") { /* ForecastingQuestionScreen() */ }
+        composable("forecastingQuestion") { ForecastingQuestionScreen(navController)}
         composable("yieldQuestion") {YieldQuestionScreen(navController)}
         composable("yieldRecord") { YieldRecordScreen() }
+        composable("forecastingRecord") { ForecastingRecordScreen()}
 
     }
 }
