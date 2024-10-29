@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import cocoguard.composeapp.generated.resources.Res
 import cocoguard.composeapp.generated.resources.cam
 import cocoguard.composeapp.generated.resources.gallery
@@ -51,7 +52,7 @@ import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun YieldQuestionScreen() {
+fun YieldQuestionScreen(navController: NavController) {
     var showDialog by remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -108,7 +109,7 @@ fun YieldQuestionScreen() {
                         )
 
                         Button(
-                            onClick = { /* Handle the button click here */ },
+                            onClick = { navController.navigate("yieldRecord") },
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
                             modifier = Modifier.width(160.dp)
                         ) {
@@ -294,7 +295,7 @@ fun YieldResultDialog(onDismiss: () -> Unit, onSave: () -> Unit) {
         },
         text = {
             Column {
-                Text(text = "Predicted Yield: 1200 kg")  // Replace with actual prediction result
+                Text(text = "Predicted Yield: 1200 ")
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "This result is based on the input factors you provided.")
             }

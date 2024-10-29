@@ -12,6 +12,7 @@ import org.example.cocoguard.screens.HomeScreen
 import org.example.cocoguard.screens.OnboardScreen
 import org.example.cocoguard.screens.disease.ImageUploadScreen
 import org.example.cocoguard.screens.yield.YieldQuestionScreen
+import org.example.cocoguard.screens.yield.YieldRecordScreen
 
 
 @Composable
@@ -31,10 +32,11 @@ fun AppNavigation(navController: NavHostController) {
         }
 
         composable("home") { HomeScreen(navController) }
-
         composable("imageUpload") {ImageUploadScreen() }
         composable("forecastingQuestion") { /* ForecastingQuestionScreen() */ }
-        composable("yieldQuestion") {YieldQuestionScreen()}
+        composable("yieldQuestion") {YieldQuestionScreen(navController)}
+        composable("yieldRecord") { YieldRecordScreen() }
+
     }
 }
 
