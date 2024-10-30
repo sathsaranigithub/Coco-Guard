@@ -59,7 +59,7 @@ fun ForecastingQuestionScreen(navController: NavController) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(270.dp)
+                .height(290.dp)
                 .padding(0.dp),
             shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp),
             backgroundColor = Color(0xFF024A1A),
@@ -98,7 +98,7 @@ fun ForecastingQuestionScreen(navController: NavController) {
                             .padding(end = 8.dp)
                     ) {
                         Text(
-                            text = "Leveraging artificial intelligence for coconut demand forecasting provides accurate, data-driven insights into market trends",
+                            text = "Leveraging AI for coconut demand forecasting provides accurate, data-driven insights into market trends",
                             color = Color.White,
                             fontSize = 16.sp,
                             fontFamily = workSansBoldFontFamily(),
@@ -110,7 +110,7 @@ fun ForecastingQuestionScreen(navController: NavController) {
                         Button(
                             onClick = { navController.navigate("forecastingRecord") },
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
-                            modifier = Modifier.width(180.dp)
+                            modifier = Modifier.width(190.dp)
                         ) {
                             Text(
                                 text = "Forecast Record",
