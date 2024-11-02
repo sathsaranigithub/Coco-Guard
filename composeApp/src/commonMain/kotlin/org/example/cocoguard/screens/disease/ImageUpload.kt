@@ -1,6 +1,8 @@
 package org.example.cocoguard.screens.disease
 
+
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,10 +24,15 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -42,12 +49,39 @@ import cocoguard.composeapp.generated.resources.gallery
 import cocoguard.composeapp.generated.resources.homemain
 import cocoguard.composeapp.generated.resources.logout
 import cocoguard.composeapp.generated.resources.uploadimage
+import coil3.Uri
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import com.mohamedrejeb.calf.io.readByteArray
+import com.mohamedrejeb.calf.picker.FilePickerFileType
+import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
+import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
+import kotlinx.coroutines.launch
 import org.example.cocoguard.screens.ImageCard
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ImageUploadScreen() {
+    val scope = rememberCoroutineScope()
+    val context = com.mohamedrejeb.calf.core.LocalPlatformContext.current
+    val byteArray = remember { mutableStateOf(ByteArray(0)) }
+
+
+    // Use a lambda to configure the file picker launcher
+    val pickerLauncher = rememberFilePickerLauncher(
+        onResult = { files ->
+            scope.launch{
+                files.firstOrNull()?.let {
+                    byteArray.value = it.readByteArray(context)
+                }
+            }
+
+        },
+        type = FilePickerFileType.Image,
+        selectionMode = FilePickerSelectionMode.Single
+    )
+
     Column(modifier = Modifier.fillMaxSize()) {
 
         // Existing top card layout
@@ -120,16 +154,28 @@ fun ImageUploadScreen() {
                 backgroundColor = Color.Gray,
                 elevation = 4.dp
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.uploadimage),
-                    contentDescription = "Upload Options",
-                    modifier = Modifier.fillMaxSize()
-                )
+                // Check if byteArray has any data, if not show the static image
+                if (byteArray.value.isNotEmpty()) {
+                    // If the byteArray has data, display it as an image
+                    AsyncImage(
+                        model = byteArray.value,
+                        modifier = Modifier.size(170.dp),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
+                    )
+                } else {
+                    // If no image has been uploaded, show the static image
+                    Image(
+                        painter = painterResource(Res.drawable.uploadimage), // Replace with your actual resource
+                        contentDescription = "Upload Image Placeholder",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
 
             // Text area with upload button
             Column(
-                modifier = Modifier
+               modifier = Modifier
                     .padding(start = 16.dp)
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.Center
@@ -161,7 +207,10 @@ fun ImageUploadScreen() {
                     Image(
                         painter = painterResource(Res.drawable.gallery),
                         contentDescription = "Gallery",
-                        modifier = Modifier.size(40.dp)
+                        // Add click listener to select image from gallery
+                        modifier = Modifier.size(40.dp).clickable {
+                            pickerLauncher.launch()
+                        }
                     )
                 }
 
