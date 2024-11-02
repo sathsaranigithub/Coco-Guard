@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -57,17 +58,34 @@ import com.mohamedrejeb.calf.io.readByteArray
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.example.cocoguard.screens.ImageCard
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.cio.endpoint
 
 @Composable
 fun ImageUploadScreen() {
     val scope = rememberCoroutineScope()
     val context = com.mohamedrejeb.calf.core.LocalPlatformContext.current
     var byteArray = remember { mutableStateOf(ByteArray(0)) }
-var platformSpecificFilePath = remember { mutableStateOf("") }
+    var platformSpecificFilePath = remember { mutableStateOf("") }
+    var responseText = remember { mutableStateOf<String?>(null) }
+    var isLoading = remember { mutableStateOf(false) }
+
 
     // Use a lambda to configure the file picker launcher
     val pickerLauncher = rememberFilePickerLauncher(
@@ -219,7 +237,14 @@ var platformSpecificFilePath = remember { mutableStateOf("") }
 
                 Button(
                     onClick = {
-                        // Upload action
+                        // Start the upload and POST request
+                        if (byteArray.value.isNotEmpty()) {
+                            scope.launch {
+                                isLoading.value = true
+                                responseText.value = uploadImage(byteArray.value)
+                                isLoading.value = false
+                            }
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                     modifier = Modifier
@@ -227,6 +252,13 @@ var platformSpecificFilePath = remember { mutableStateOf("") }
                         .padding(top = 16.dp)
                 ) {
                     Text(text = "Upload", color = Color.White)
+                }
+                if (isLoading.value) {
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                }
+
+                responseText?.let {
+                    Text(text = "Server Response: $it", color = Color.Black, modifier = Modifier.padding(16.dp))
                 }
             }
         }
@@ -298,5 +330,43 @@ var platformSpecificFilePath = remember { mutableStateOf("") }
                 }
             }
         }
+    }
+}
+suspend fun uploadImage(imageBytes: ByteArray): String {
+    val client = HttpClient(CIO) {
+        install(Logging) {
+            level = LogLevel.INFO}
+            engine {
+                endpoint {
+                    connectTimeout = 60000
+                    requestTimeout = 60000
+                    socketTimeout = 60000
+                }
+        }
+    }
+
+    return try {
+        val response: HttpResponse = client.submitFormWithBinaryData(
+            url = "https://us-central1-tea-factory-management-system.cloudfunctions.net/teadiseasedetection",
+            formData = formData {
+                append("image", imageBytes, Headers.build {
+                    append(HttpHeaders.ContentType, "image/jpeg")
+                    append(HttpHeaders.ContentDisposition, "filename=\"uploaded_image.jpg\"")
+                })
+            }
+        )
+
+
+        val responseBody = response.bodyAsText()
+
+        if (response.status == HttpStatusCode.OK) {
+            responseBody
+        } else {
+            "Error: ${response.status} - ${responseBody}"
+        }
+    } catch (e: Exception) {
+        "Failed to upload image: ${e.message}"
+    } finally {
+        client.close()
     }
 }

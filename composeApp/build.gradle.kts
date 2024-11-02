@@ -32,7 +32,6 @@ kotlin {
         }
         binaries.executable()
     }
-    
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -44,7 +43,6 @@ kotlin {
     
     sourceSets {
         val desktopMain by getting
-        
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -64,6 +62,14 @@ kotlin {
             implementation("com.mohamedrejeb.calf:calf-file-picker:0.5.3")
             implementation("com.mohamedrejeb.calf:calf-file-picker-coil:0.5.1")
             implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha08")
+
+            implementation("io.ktor:ktor-client-core:2.3.4")
+            implementation("io.ktor:ktor-client-logging:2.3.4")
+            implementation("io.ktor:ktor-client-content-negotiation:2.3.4")
+            implementation("io.ktor:ktor-client-serialization:2.3.4")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
+            implementation("io.ktor:ktor-client-cio:2.3.3")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
