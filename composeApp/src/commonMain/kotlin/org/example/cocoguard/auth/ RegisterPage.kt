@@ -19,6 +19,10 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,10 +41,14 @@ import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
 import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
+//import org.example.cocoguard.utils.AuthUtil
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun RegisterPage(onNavigateToLogin: () -> Unit) {
+//    var email by remember { mutableStateOf("") }
+//    var password by remember { mutableStateOf("") }
+//    var errorMessage by remember { mutableStateOf<String?>(null) }
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -139,7 +147,15 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
-                        onClick = { /* Handle registration action */ },
+                        onClick = {
+//                            AuthUtil.signUp(email, password) { success, message ->
+//                                if (success) {
+//                                    onNavigateToLogin()  // Direct to login on successful registration
+//                                } else {
+//                                    errorMessage = message
+//                                }
+//                            }
+                        },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -152,6 +168,14 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
                             style = TextStyle(fontSize = 18.sp)
                         )
                     }
+//                    errorMessage?.let {
+//                        Text(
+//                            text = it,
+//                            color = Color.Red,
+//                            style = TextStyle(fontSize = 14.sp),
+//                            modifier = Modifier.padding(top = 10.dp)
+//                        )
+//                    }
                 }
             }
 

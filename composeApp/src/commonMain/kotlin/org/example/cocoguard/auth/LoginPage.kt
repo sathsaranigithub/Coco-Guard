@@ -40,14 +40,17 @@ import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
 import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
+//import org.example.cocoguard.utils.AuthUtil
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.FontResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun LoginPage(onNavigateToRegister: () -> Unit,onNavigateToHome: () -> Unit) {
-    // Background setup with an image
-    // Background setup with an image
+//    var email by remember { mutableStateOf("") }
+//    var password by remember { mutableStateOf("") }
+//    var errorMessage by remember { mutableStateOf<String?>(null) }
+
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -147,7 +150,15 @@ fun LoginPage(onNavigateToRegister: () -> Unit,onNavigateToHome: () -> Unit) {
 
                     // Login Button
                     Button(
-                        onClick = onNavigateToHome,
+                        onClick = {
+//                            AuthUtil.signIn(email, password) { success, message ->
+//                                if (success) {
+                                    onNavigateToHome()
+//                                } else {
+//                                    errorMessage = message
+//                                }
+//                            }
+                        },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)), // Set to green
                         modifier = Modifier
                             .fillMaxWidth()
@@ -160,6 +171,14 @@ fun LoginPage(onNavigateToRegister: () -> Unit,onNavigateToHome: () -> Unit) {
                             style = TextStyle(fontSize = 18.sp)
                         )
                     }
+//                    errorMessage?.let {
+//                        Text(
+//                            text = it,
+//                            color = Color.Red,
+//                            style = TextStyle(fontSize = 14.sp),
+//                            modifier = Modifier.padding(top = 10.dp)
+//                        )
+//                    }
                 }
             }
             Spacer(modifier = Modifier.height(30.dp)) // Space between button and logo
