@@ -52,6 +52,7 @@ import cocoguard.composeapp.generated.resources.uploadimage
 import coil3.Uri
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
+import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.io.readByteArray
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
@@ -65,8 +66,8 @@ import org.jetbrains.compose.resources.painterResource
 fun ImageUploadScreen() {
     val scope = rememberCoroutineScope()
     val context = com.mohamedrejeb.calf.core.LocalPlatformContext.current
-    val byteArray = remember { mutableStateOf(ByteArray(0)) }
-
+    var byteArray = remember { mutableStateOf(ByteArray(0)) }
+var platformSpecificFilePath = remember { mutableStateOf("") }
 
     // Use a lambda to configure the file picker launcher
     val pickerLauncher = rememberFilePickerLauncher(
@@ -74,6 +75,7 @@ fun ImageUploadScreen() {
             scope.launch{
                 files.firstOrNull()?.let {
                     byteArray.value = it.readByteArray(context)
+                    platformSpecificFilePath.value = it.getPath(context)?:""
                 }
             }
 
@@ -171,6 +173,7 @@ fun ImageUploadScreen() {
                         modifier = Modifier.fillMaxSize()
                     )
                 }
+                Text("file path: $platformSpecificFilePath")
             }
 
             // Text area with upload button
