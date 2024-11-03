@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -69,6 +70,10 @@ kotlin {
             implementation("io.ktor:ktor-client-serialization:2.3.4")
             implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
             implementation("io.ktor:ktor-client-cio:2.3.3")
+
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+            implementation("org.json:json:20210307")
+            implementation ("androidx.appcompat:appcompat:1.6.1")
 
         }
         desktopMain.dependencies {

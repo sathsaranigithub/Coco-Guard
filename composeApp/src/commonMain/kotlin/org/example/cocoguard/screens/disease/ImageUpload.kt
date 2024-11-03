@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,16 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,25 +36,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.cam
-import cocoguard.composeapp.generated.resources.cardone
-import cocoguard.composeapp.generated.resources.cardthree
-import cocoguard.composeapp.generated.resources.cardtwo
 import cocoguard.composeapp.generated.resources.gallery
 import cocoguard.composeapp.generated.resources.homemain
-import cocoguard.composeapp.generated.resources.logout
 import cocoguard.composeapp.generated.resources.uploadimage
-import coil3.Uri
 import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
 import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.io.readByteArray
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.cio.endpoint
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.forms.formData
@@ -68,15 +58,26 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.example.cocoguard.screens.ImageCard
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.engine.cio.endpoint
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.TextButton
 
+@Serializable
+data class DetectionResult(val `class`: String) // Use backticks if "class" is a reserved keyword
+
+// Add this function to parse the JSON response
+fun parseDiseaseFromResponse(response: String): String {
+    return try {
+        val detectionResult = Json.decodeFromString<DetectionResult>(response)
+        detectionResult.`class`
+    } catch (e: Exception) {
+        "Unknown disease" // Handle parsing errors
+    }
+}
 @Composable
 fun ImageUploadScreen() {
     val scope = rememberCoroutineScope()
@@ -85,6 +86,8 @@ fun ImageUploadScreen() {
     var platformSpecificFilePath = remember { mutableStateOf("") }
     var responseText = remember { mutableStateOf<String?>(null) }
     var isLoading = remember { mutableStateOf(false) }
+    var detectedDisease = remember { mutableStateOf("") }
+    var showDialog = remember { mutableStateOf(false) }
 
 
     // Use a lambda to configure the file picker launcher
@@ -191,7 +194,6 @@ fun ImageUploadScreen() {
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                Text("file path: $platformSpecificFilePath")
             }
 
             // Text area with upload button
@@ -208,7 +210,7 @@ fun ImageUploadScreen() {
                     color = Color.Black
                 )
                 Text(
-                    text = "You can use your camera or select an existing photo to upload.",
+                    text = "You can select an existing photo to upload.",
                     fontSize = 14.sp,
                     color = Color.Gray,
                     modifier = Modifier.padding(top = 4.dp)
@@ -221,14 +223,8 @@ fun ImageUploadScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        painter = painterResource(Res.drawable.cam),
-                        contentDescription = "Camera",
-                        modifier = Modifier.size(40.dp)
-                    )
-                    Image(
                         painter = painterResource(Res.drawable.gallery),
                         contentDescription = "Gallery",
-                        // Add click listener to select image from gallery
                         modifier = Modifier.size(40.dp).clickable {
                             pickerLauncher.launch()
                         }
@@ -241,7 +237,9 @@ fun ImageUploadScreen() {
                         if (byteArray.value.isNotEmpty()) {
                             scope.launch {
                                 isLoading.value = true
-                                responseText.value = uploadImage(byteArray.value)
+                                val response = uploadImage(byteArray.value)
+                                responseText.value = response // Store the full response text
+                                detectedDisease.value = parseDiseaseFromResponse(response) // Parse the disease
                                 isLoading.value = false
                             }
                         }
@@ -254,81 +252,94 @@ fun ImageUploadScreen() {
                     Text(text = "Upload", color = Color.White)
                 }
                 if (isLoading.value) {
-                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                }
-
-                responseText?.let {
-                    Text(text = "Server Response: $it", color = Color.Black, modifier = Modifier.padding(16.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(2.dp),
+                        color = Color(0xFF4CAF50))
                 }
             }
         }
-
-        // Scrollable Card View below the existing row
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .weight(1f) // Ensures it fills the remaining space in Column
-        ) {
-            item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    elevation = 4.dp
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Detected disease: Lethal Yellowing",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Description",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "Lethal Yellowing is a devastating disease that affects coconut trees, causing premature fruit drop, yellowing of leaves, and, eventually, the death of the tree. The disease is caused by a phytoplasma (a type of bacteria without a cell wall) that affects the vascular system of the tree, impeding the flow of water and nutrients.",
-                            fontSize = 14.sp,
-                            color = Color.Gray
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Symptoms",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "Premature fruit drop from all maturity stages\n" +
-                                    "Yellowing of older leaves, eventually spreading to the entire canopy\n" +
-                                    "Deterioration of flower spikes\n" +
-                                    "Collapse of the crown, leading to the tree's death within a few months if untreated",
-                            fontSize = 14.sp,
-                            color = Color.Gray
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Treatment",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "Antibiotic Treatment: Injecting the trunk with oxytetracycline (OTC) antibiotic can suppress the phytoplasma in the early stages. However, this is a temporary solution and must be repeated every 4–5 months.\n" +
-                                    "Resistant Varieties: Planting resistant varieties like the Malayan Dwarf or Maypan hybrids has proven to be one of the most effective long-term strategies.\n" +
-                                    "Tree Removal: If a tree is severely affected, it should be removed and destroyed to prevent the spread of the disease to healthy palms nearby.",
-                            fontSize = 14.sp,
-                            color = Color.Gray
-                        )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .weight(1f)
+            ) {
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        elevation = 4.dp
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            if (detectedDisease.value.isNotEmpty()) {
+
+                                if(detectedDisease.value != "Unknown disease" && detectedDisease.value != "Unknown Class"){
+                                Text(
+                                    text = "Detected disease: ${detectedDisease.value}",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Description",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = when (detectedDisease.value) {
+                                        "Red rust" -> "Red Rust is caused by an alga, Cephaleuros virescens. This disease commonly affects leaves, young stems, and twigs, causing a reddish appearance on the plant."
+                                        "Blister Blight" -> "Blister Blight is caused by the fungus Exobasidium vexans, primarily affecting young leaves. This disease is severe in areas with high humidity."
+                                        "Brown Blight" -> "Brown Blight is caused by the fungus Colletotrichum camelliae. It affects leaves, stems, and even buds in severe cases, often appearing in humid and rainy conditions."
+                                        else -> "Description of the diseases"
+                                    },
+                                    fontSize = 14.sp,
+                                    color = Color.Gray
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Symptoms",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text =  when (detectedDisease.value) {
+                                        "Red rust" -> "Orange or reddish patches on leaves and stems.\nAffected leaves may become stunted, and severe infestations can lead to defoliation."
+                                        "Blister Blight" -> "Small, translucent blisters form on the upper side of young leaves.\nThese blisters enlarge and turn brown, ultimately leading to leaf deformation and tissue death."
+                                        "Brown Blight" -> "Circular brown spots on leaves, sometimes with yellow halos.\nLeaf edges may become ragged, and in severe cases, whole leaves turn brown and fall off."
+                                        else -> "Symptoms of the diseases"
+                                    }, fontSize = 14.sp,
+                                    color = Color.Gray
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Treatment",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Text(
+
+                                    text = when (detectedDisease.value) {
+                                        "Red rust" -> "Cultural: Prune heavily infected parts of the plant to remove sources of the disease.\nChemical: Apply copper-based fungicides or algaecides to prevent and reduce infection. Consistent monitoring is necessary, especially during wet seasons when the disease is more active."
+                                        "Blister Blight" -> "Cultural: Maintain optimal spacing between plants to reduce humidity and improve airflow.\nChemical: Spray with fungicides like copper oxychloride or systemic fungicides such as triadimefon, especially during rainy seasons. Regularly monitor for early signs on new growth."
+                                        "Brown Blight" -> "Cultural: Prune infected leaves and maintain good field hygiene to limit the spread.\nChemical: Use fungicides like carbendazim or copper-based sprays. Preventive treatments may be applied during humid conditions to reduce infection risks."
+                                        else -> "Treatment options for the diseases"
+                                    },   fontSize = 14.sp,
+                                    color = Color.Gray
+                                )
+                                }
+                                else{
+                                    showAlertDialog(onDismiss = { showDialog.value = false })
+                                }
+                            }
+                        }
                     }
                 }
-            }
         }
     }
 }
@@ -369,4 +380,26 @@ suspend fun uploadImage(imageBytes: ByteArray): String {
     } finally {
         client.close()
     }
+}
+@Composable
+fun showAlertDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Invalid image") },
+        text = {
+            Column {
+                Text(text = "Please upload a valid image.")
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "This image can't be identified by the AI model. Please upload a clear and valid image and try again.")
+            }
+        },
+        confirmButton = {  },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text(text = "Close", color = Color.Green)
+            }
+        }
+    )
 }
