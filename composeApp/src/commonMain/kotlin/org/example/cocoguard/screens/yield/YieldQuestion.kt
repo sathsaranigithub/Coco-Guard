@@ -3,7 +3,6 @@ package org.example.cocoguard.screens.yield
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -21,13 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.baseline_arrow_drop_down_24
 import cocoguard.composeapp.generated.resources.homemain
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.kotlinx.serializer.KotlinxSerializer
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.post
@@ -35,8 +31,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -201,7 +195,6 @@ fun YieldQuestionScreen(navController: NavController) {
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp)
                         )
-
                         Button(
                             onClick = { navController.navigate("yieldRecord") },
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
@@ -215,7 +208,6 @@ fun YieldQuestionScreen(navController: NavController) {
                             )
                         }
                     }
-
                     Image(
                         painter = painterResource(Res.drawable.homemain),
                         contentDescription = "Main",
