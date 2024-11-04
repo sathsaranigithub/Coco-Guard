@@ -45,13 +45,12 @@ import org.jetbrains.compose.resources.painterResource
 
 @Serializable
 data class YieldPredictionResponse(
-    val label: Double // Change to Double to match the JSON input
+    val label: Double
 )
 @Composable
 fun YieldQuestionScreen(navController: NavController) {
     var showDialog by remember { mutableStateOf(false) }
     var predictionResult by remember { mutableStateOf("") }
-
     // State holders for each input field
     var soilType by remember { mutableStateOf("Loamy") }
     var soilPH by remember { mutableStateOf("") }
@@ -61,10 +60,8 @@ fun YieldQuestionScreen(navController: NavController) {
     var month by remember { mutableStateOf("January") }
     var plantAge by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-
     var showValidationError by remember { mutableStateOf(false) }
     var validationErrorMessage by remember { mutableStateOf("") }
-
     val client = HttpClient(CIO) {
         engine {
             requestTimeout = 60_000
@@ -154,9 +151,7 @@ fun YieldQuestionScreen(navController: NavController) {
             showValidationError = true
         }
     }
-
     Column(modifier = Modifier.fillMaxSize()) {
-        // Existing top card layout
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -171,7 +166,6 @@ fun YieldQuestionScreen(navController: NavController) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                // Title
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(color = Color.White)) {
@@ -186,7 +180,6 @@ fun YieldQuestionScreen(navController: NavController) {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
-
                 // Card Content
                 Row(
                     modifier = Modifier
@@ -234,9 +227,7 @@ fun YieldQuestionScreen(navController: NavController) {
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         // Questions Section
         LazyColumn(
             modifier = Modifier
@@ -332,24 +323,9 @@ fun YieldQuestionScreen(navController: NavController) {
                         )
                     }
                 }
-
-
             }
         }
-
     }
-//    if (showValidationError) {
-//        Text(
-//            text = validationErrorMessage,
-//            color = Color.Red,
-//            fontSize = 14.sp,
-//            modifier = Modifier
-//                .padding(16.dp)
-//                .background(Color(0x80FFCECA)) // Light red background for emphasis
-//                .padding(8.dp)
-//        )
-//    }
-
     if (showDialog) {
         YieldResultDialog(
             result = predictionResult,
@@ -371,13 +347,11 @@ fun YieldQuestionScreen(navController: NavController) {
         }
     }
 }
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DropdownQuestion(question: String, options: List<String>, hint: String, onSelect: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(hint) }
-
     Column {
         Text(
             text = question,
@@ -393,7 +367,6 @@ fun DropdownQuestion(question: String, options: List<String>, hint: String, onSe
                 value = selectedOption,
                 onValueChange = { },
                 readOnly = true,
-//                label = { Text(hint) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White, shape = RoundedCornerShape(10.dp))
@@ -406,7 +379,6 @@ fun DropdownQuestion(question: String, options: List<String>, hint: String, onSe
                     errorIndicatorColor = Color.Red
                 ),
                 shape = RoundedCornerShape(10.dp)
-
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -427,7 +399,6 @@ fun DropdownQuestion(question: String, options: List<String>, hint: String, onSe
         }
     }
 }
-
 @Composable
 fun TextFieldQuestion(question: String, hint: String, value: String, onValueChange: (String) -> Unit) {
     Column {
@@ -456,7 +427,6 @@ fun TextFieldQuestion(question: String, hint: String, value: String, onValueChan
         )
     }
 }
-
 @Composable
 fun YieldResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit) {
     AlertDialog(
@@ -479,9 +449,6 @@ fun YieldResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit)
         }
     )
 }
-
-
-// Remember to define your YieldPredictionRequest data class
 @Serializable
 data class YieldPredictionRequest(
     val soil_type_input: String,
@@ -492,7 +459,6 @@ data class YieldPredictionRequest(
     val month_input: String,
     val plant_age_input: Int
 )
-// Define fetchYieldPrediction function as per your implementation
 suspend fun fetchYieldPrediction(client: HttpClient, request: YieldPredictionRequest): YieldPredictionResponse? {
     return try {
         client.post("https://us-central1-tea-factory-management-system.cloudfunctions.net/yieldprediction") {
@@ -502,6 +468,5 @@ suspend fun fetchYieldPrediction(client: HttpClient, request: YieldPredictionReq
     } catch (e: Exception) {
         println("Error occurred: ${e.message}")
         null
-
     }
 }
