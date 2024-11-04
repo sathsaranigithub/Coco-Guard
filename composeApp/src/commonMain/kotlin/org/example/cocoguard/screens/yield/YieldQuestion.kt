@@ -2,6 +2,7 @@ package org.example.cocoguard.screens.yield
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -61,6 +62,9 @@ fun YieldQuestionScreen(navController: NavController) {
     var plantAge by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
 
+    var showValidationError by remember { mutableStateOf(false) }
+    var validationErrorMessage by remember { mutableStateOf("") }
+
     val client = HttpClient(CIO) {
         engine {
             requestTimeout = 60_000
@@ -72,12 +76,58 @@ fun YieldQuestionScreen(navController: NavController) {
             level = LogLevel.BODY
         }
     }
-
-
-
     // Function to handle submission
     val scope = rememberCoroutineScope()
+    fun validateInputs(): Boolean {
+        return when {
+            soilPH.isBlank() -> {
+                validationErrorMessage = "Soil pH is required."
+                false
+            }
+            soilPH.toDoubleOrNull() == null -> {
+                validationErrorMessage = "Soil pH must be a valid number."
+                false
+            }
+            humidity.isBlank() -> {
+                validationErrorMessage = "Humidity percentage is required."
+                false
+            }
+            humidity.toIntOrNull() == null -> {
+                validationErrorMessage = "Humidity must be a valid number."
+                false
+            }
+            temperature.isBlank() -> {
+                validationErrorMessage = "Temperature is required."
+                false
+            }
+            temperature.toIntOrNull() == null -> {
+                validationErrorMessage = "Temperature must be a valid number."
+                false
+            }
+            sunlightHours.isBlank() -> {
+                validationErrorMessage = "Sunlight hours are required."
+                false
+            }
+            sunlightHours.toIntOrNull() == null -> {
+                validationErrorMessage = "Sunlight hours must be a valid number."
+                false
+            }
+            plantAge.isBlank() -> {
+                validationErrorMessage = "Plant age is required."
+                false
+            }
+            plantAge.toIntOrNull() == null -> {
+                validationErrorMessage = "Plant age must be a valid number."
+                false
+            }
+            else -> {
+                showValidationError = false // Reset validation error state
+                true
+            }
+        }
+    }
     fun submitData() {
+        if (validateInputs()) {
         isLoading = true
         scope.launch {
             val request = YieldPredictionRequest(
@@ -99,6 +149,9 @@ fun YieldQuestionScreen(navController: NavController) {
             }
             isLoading = false
             showDialog = true
+        }
+        } else {
+            showValidationError = true
         }
     }
 
@@ -250,10 +303,22 @@ fun YieldQuestionScreen(navController: NavController) {
             item {
                 // Submit Button
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Validation message on the start of the row
+                    if (showValidationError) {
+                        Text(
+                            text = validationErrorMessage,
+                            color = Color.Red,
+                            fontSize = 14.sp,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .background(Color(0x80FFCECA)) // Light red background for emphasis
+                                .padding(8.dp)
+                                .weight(1f) // Take up available space
+                        )
+                    }
                     Button(
                         onClick = { submitData() },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
@@ -267,10 +332,23 @@ fun YieldQuestionScreen(navController: NavController) {
                         )
                     }
                 }
+
+
             }
         }
 
     }
+//    if (showValidationError) {
+//        Text(
+//            text = validationErrorMessage,
+//            color = Color.Red,
+//            fontSize = 14.sp,
+//            modifier = Modifier
+//                .padding(16.dp)
+//                .background(Color(0x80FFCECA)) // Light red background for emphasis
+//                .padding(8.dp)
+//        )
+//    }
 
     if (showDialog) {
         YieldResultDialog(
@@ -315,14 +393,20 @@ fun DropdownQuestion(question: String, options: List<String>, hint: String, onSe
                 value = selectedOption,
                 onValueChange = { },
                 readOnly = true,
-                label = { Text(hint) },
-                trailingIcon = {
-//                    Icon(
-//                        painter = painterResource(Res.drawable.baseline_arrow_drop_down_24),
-//                        contentDescription = "Dropdown",
-//                        modifier = Modifier.clickable { expanded = true }
-//                    )
-                }
+//                label = { Text(hint) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, shape = RoundedCornerShape(10.dp))
+                    .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent, // Dark green
+                    unfocusedIndicatorColor = Color.Transparent, // No underline when not focused
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Red
+                ),
+                shape = RoundedCornerShape(10.dp)
+
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -356,8 +440,19 @@ fun TextFieldQuestion(question: String, hint: String, value: String, onValueChan
         TextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text(hint) },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text(text = hint, color = Color(0xFF4CAF50)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White, shape = RoundedCornerShape(10.dp))
+                .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Red
+            ),
+            shape = RoundedCornerShape(10.dp)
         )
     }
 }
@@ -366,8 +461,9 @@ fun TextFieldQuestion(question: String, hint: String, value: String, onValueChan
 fun YieldResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Prediction Result") },
-        text = { Text("Yield Prediction: $result") },
+        title = { Text("Prediction Result", fontFamily = workSansBoldFontFamily(), fontSize = 25.sp, color = Color(0xFF024A1A)) },
+        text = { Text("Yield Prediction: $result",
+             fontFamily = workSansBoldFontFamily(), fontSize = 20.sp) },
         confirmButton = {
             Button(
                 onClick = onDismiss,
@@ -383,6 +479,7 @@ fun YieldResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit)
         }
     )
 }
+
 
 // Remember to define your YieldPredictionRequest data class
 @Serializable
