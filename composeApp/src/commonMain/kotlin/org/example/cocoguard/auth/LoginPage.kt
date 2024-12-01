@@ -28,14 +28,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.lemonada
-import cocoguard.composeapp.generated.resources.login
-import cocoguard.composeapp.generated.resources.logo
-import cocoguard.composeapp.generated.resources.register
-import cocoguard.composeapp.generated.resources.worksansbold
-import cocoguard.composeapp.generated.resources.worksansregular
-import cocoguard.composeapp.generated.resources.worksanssemibold
+import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.logo
+import coco_guard.composeapp.generated.resources.register
+
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily

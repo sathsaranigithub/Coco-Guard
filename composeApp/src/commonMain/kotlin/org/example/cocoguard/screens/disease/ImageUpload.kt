@@ -36,10 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.gallery
-import cocoguard.composeapp.generated.resources.homemain
-import cocoguard.composeapp.generated.resources.uploadimage
+
 import coil3.compose.AsyncImage
 import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.io.readByteArray
@@ -65,6 +62,10 @@ import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextButton
+import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.gallery
+import coco_guard.composeapp.generated.resources.homemain
+import coco_guard.composeapp.generated.resources.uploadimage
 
 @Serializable
 data class DetectionResult(val `class`: String) // Use backticks if "class" is a reserved keyword

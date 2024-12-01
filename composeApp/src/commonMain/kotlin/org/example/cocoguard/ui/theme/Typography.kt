@@ -6,13 +6,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.lemonada
-import cocoguard.composeapp.generated.resources.worksansblack
-import cocoguard.composeapp.generated.resources.worksansbold
-import cocoguard.composeapp.generated.resources.worksansmedium
-import cocoguard.composeapp.generated.resources.worksansregular
-import cocoguard.composeapp.generated.resources.worksanssemibold
+import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.lemonada
+import coco_guard.composeapp.generated.resources.worksansbold
+import coco_guard.composeapp.generated.resources.worksansmedium
+import coco_guard.composeapp.generated.resources.worksanssemibold
+
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 

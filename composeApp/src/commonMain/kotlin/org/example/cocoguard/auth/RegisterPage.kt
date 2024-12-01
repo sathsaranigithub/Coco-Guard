@@ -31,24 +31,36 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.logo
-import cocoguard.composeapp.generated.resources.register
+import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.logo
+import coco_guard.composeapp.generated.resources.register
+import org.example.cocoguard.AuthService
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
 import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
 //import org.example.cocoguard.utils.AuthUtil
 import org.jetbrains.compose.resources.painterResource
+import java.lang.System.getProperty
+
+
+fun isAndroid(): Boolean = getProperty("java.runtime.name")?.contains("Android") == true
+fun isDesktop(): Boolean = !isAndroid()
+
 
 @Composable
-fun RegisterPage(onNavigateToLogin: () -> Unit) {
-//    var email by remember { mutableStateOf("") }
-//    var password by remember { mutableStateOf("") }
-//    var errorMessage by remember { mutableStateOf<String?>(null) }
+fun RegisterPage(onSave: (String, String) -> Unit,
+                 onSaveUser: (String, String) -> Unit,
+                 onNavigateToLogin: () -> Unit) {
+    var email by remember { mutableStateOf(TextFieldValue("")) }
+    var password by remember { mutableStateOf(TextFieldValue("")) }
+    var isPasswordVisible by remember { mutableStateOf(false) } // Track visibility of password
+
+
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -122,10 +134,10 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
                     Spacer(modifier = Modifier.height(10.dp))
 
                     TextField(
-                        value = "",
-                        onValueChange = { /* Handle email input */ },
+                        value = email,
+                        onValueChange = { email = it },
                         label = { Text("E-mail") },
-                        colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.Transparent,
                             textColor = Color.Black
                         ),
@@ -134,10 +146,11 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
                     Spacer(modifier = Modifier.height(10.dp))
 
                     TextField(
-                        value = "",
-                        onValueChange = { /* Handle password input */ },
+                        value = password,
+                        onValueChange = { password = it },
                         label = { Text("Password") },
-                        visualTransformation = PasswordVisualTransformation(),
+
+                                visualTransformation = PasswordVisualTransformation(),
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.Transparent,
                             textColor = Color.Black
@@ -148,13 +161,13 @@ fun RegisterPage(onNavigateToLogin: () -> Unit) {
 
                     Button(
                         onClick = {
-//                            AuthUtil.signUp(email, password) { success, message ->
-//                                if (success) {
-//                                    onNavigateToLogin()  // Direct to login on successful registration
-//                                } else {
-//                                    errorMessage = message
-//                                }
-//                            }
+                            if (email.text.isNotBlank() && password.text.isNotBlank()) {
+                                if (isAndroid()) {
+                                    onSaveUser(email.text, password.text)
+                                } else if (isDesktop()) {
+                                    onSave(email.text, password.text)
+                                }
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                         modifier = Modifier

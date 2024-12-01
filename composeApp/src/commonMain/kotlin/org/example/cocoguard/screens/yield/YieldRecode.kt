@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.homemain
+import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.homemain
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 

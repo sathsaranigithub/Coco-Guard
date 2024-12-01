@@ -27,8 +27,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.mainimage
 import androidx.compose.ui.unit.dp
 import org.example.cocoguard.auth.LoginPage
 import org.example.cocoguard.navigation.navControllerWithNavigation

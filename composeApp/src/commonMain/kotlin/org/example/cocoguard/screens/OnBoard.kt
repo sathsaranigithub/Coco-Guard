@@ -16,8 +16,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.mainimage
+import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.mainimage
 import org.example.cocoguard.ui.theme.headingTextStyle
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.subHeadingTextStyle

@@ -42,11 +42,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import cocoguard.composeapp.generated.resources.Res
-import cocoguard.composeapp.generated.resources.cam
-import cocoguard.composeapp.generated.resources.gallery
-import cocoguard.composeapp.generated.resources.homemain
-import cocoguard.composeapp.generated.resources.uploadimage
+import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.homemain
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 

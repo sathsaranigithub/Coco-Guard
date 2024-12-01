@@ -1,4 +1,4 @@
-rootProject.name = "CocoGuard"
+rootProject.name = "Coco-Guard"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
