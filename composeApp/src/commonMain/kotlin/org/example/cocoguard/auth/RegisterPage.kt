@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +40,12 @@ import androidx.compose.ui.unit.sp
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.logo
 import coco_guard.composeapp.generated.resources.register
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.example.cocoguard.AuthService
+import org.example.cocoguard.FirestoreRepository
+import org.example.cocoguard.User
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
@@ -46,19 +53,22 @@ import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
 //import org.example.cocoguard.utils.AuthUtil
 import org.jetbrains.compose.resources.painterResource
 import java.lang.System.getProperty
-
-
-fun isAndroid(): Boolean = getProperty("java.runtime.name")?.contains("Android") == true
-fun isDesktop(): Boolean = !isAndroid()
+import java.security.MessageDigest
 
 
 @Composable
-fun RegisterPage(onSave: (String, String) -> Unit,
-                 onSaveUser: (String, String) -> Unit,
+fun RegisterPage(
+                 onNavigateToHome: () -> Unit,
                  onNavigateToLogin: () -> Unit) {
+    var uname by remember { mutableStateOf(TextFieldValue("")) }
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var isPasswordVisible by remember { mutableStateOf(false) } // Track visibility of password
+    var loading by remember { mutableStateOf(false) } // Loading state
+    var errorMessage by remember { mutableStateOf<String?>(null) } // Error state
+    val coroutineScope = rememberCoroutineScope()
+    val repository = FirestoreRepository()
+    val authService = AuthService(repository)
 
 
     Row(
@@ -122,8 +132,8 @@ fun RegisterPage(onSave: (String, String) -> Unit,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     TextField(
-                        value = "",
-                        onValueChange = { /* Handle username input */ },
+                        value = uname,
+                        onValueChange = { uname = it },
                         label = { Text("User name") },
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.Transparent,
@@ -161,13 +171,34 @@ fun RegisterPage(onSave: (String, String) -> Unit,
 
                     Button(
                         onClick = {
-                            if (email.text.isNotBlank() && password.text.isNotBlank()) {
-                                if (isAndroid()) {
-                                    onSaveUser(email.text, password.text)
-                                } else if (isDesktop()) {
-                                    onSave(email.text, password.text)
+                            loading = true
+                            errorMessage = null
+                                if (uname.text.isNotBlank() && email.text.isNotBlank() && password.text.isNotBlank()) {
+                                    coroutineScope.launch {
+                                        try {
+
+                                            val encryptedPassword = encryptPassword(password.text)
+                                            val result = repository.addUser(User(uname.text,email.text, encryptedPassword))
+                                            withContext(Dispatchers.Main) {
+                                                if (result.isSuccess) {
+                                                    onNavigateToHome()
+                                                    errorMessage  = "User added successfully!" // Success message
+                                                } else {
+                                                    errorMessage  = "Error: ${result.exceptionOrNull()?.message}" // Error message
+                                                }
+                                            }
+                                        } catch (e: Exception) {
+                                            withContext(Dispatchers.Main) {
+                                                loading = false // Hide loading
+                                                errorMessage  = "Error: ${e.message}" // Error message
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    errorMessage  = "Please fill in both fields."
+                                    loading = false
                                 }
-                            }
+
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                         modifier = Modifier
@@ -175,11 +206,14 @@ fun RegisterPage(onSave: (String, String) -> Unit,
                             .clip(RoundedCornerShape(10.dp))
                             .padding(vertical = 10.dp)
                     ) {
-                        Text(
-                            text = "Register",
-                            color = Color.White,
-                            style = TextStyle(fontSize = 18.sp)
-                        )
+                        if (loading) {
+                            CircularProgressIndicator(
+                                color = Color(0xFF4CAF50),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        } else {
+                            Text("Register", color = Color.White)
+                        }
                     }
 //                    errorMessage?.let {
 //                        Text(
@@ -229,4 +263,9 @@ fun RegisterPage(onSave: (String, String) -> Unit,
             }
         }
     }
+}
+fun encryptPassword(password: String): String {
+    val messageDigest = MessageDigest.getInstance("SHA-256")
+    val hashedBytes = messageDigest.digest(password.toByteArray())
+    return hashedBytes.joinToString("") { "%02x".format(it) }
 }

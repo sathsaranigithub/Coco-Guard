@@ -10,24 +10,34 @@ class FirestoreRepository {
 
     suspend fun addUser(user: User): Result<String> {
         return try {
-
-            val existingUser = db.collection("users")
+            // Check if the email is already registered
+            val existingEmail = db.collection("users")
                 .whereEqualTo("email", user.email)
                 .get()
                 .await()
 
-            if (!existingUser.isEmpty) {
-
-                Result.failure(Exception("User with this email is already registered."))
+            if (!existingEmail.isEmpty) {
+                Result.failure(Exception("This email is already registered."))
             } else {
+                // Check if the username is already taken
+                val existingUname = db.collection("users")
+                    .whereEqualTo("uname", user.uname)
+                    .get()
+                    .await()
 
-                val document = db.collection("users").add(user).await()
-                Result.success(document.id)
+                if (!existingUname.isEmpty) {
+                    Result.failure(Exception("This username is already taken."))
+                } else {
+                    // Add the new user
+                    val document = db.collection("users").add(user).await()
+                    Result.success(document.id)
+                }
             }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
 
 
     suspend fun getUserByEmail(email: String): User? {
