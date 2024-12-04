@@ -168,7 +168,6 @@ fun RegisterPage(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(20.dp))
-
                     Button(
                         onClick = {
                             loading = true
@@ -176,7 +175,6 @@ fun RegisterPage(
                                 if (uname.text.isNotBlank() && email.text.isNotBlank() && password.text.isNotBlank()) {
                                     coroutineScope.launch {
                                         try {
-
                                             val encryptedPassword = encryptPassword(password.text)
                                             val result = repository.addUser(User(uname.text,email.text, encryptedPassword))
                                             withContext(Dispatchers.Main) {

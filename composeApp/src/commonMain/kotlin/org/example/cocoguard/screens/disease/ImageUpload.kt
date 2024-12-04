@@ -63,6 +63,7 @@ import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextButton
 import coco_guard.composeapp.generated.resources.Res
+import coco_guard.composeapp.generated.resources.first
 import coco_guard.composeapp.generated.resources.gallery
 import coco_guard.composeapp.generated.resources.homemain
 import coco_guard.composeapp.generated.resources.uploadimage
@@ -153,7 +154,7 @@ fun ImageUploadScreen() {
                         modifier = Modifier.weight(1f)
                     )
                     Image(
-                        painter = painterResource(Res.drawable.homemain),
+                        painter = painterResource(Res.drawable.first),
                         contentDescription = "Main",
                         modifier = Modifier
                             .fillMaxWidth(1 / 3f)

@@ -1,15 +1,22 @@
 // Home.kt
 package org.example.cocoguard.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +34,11 @@ import coco_guard.composeapp.generated.resources.cardthree
 import coco_guard.composeapp.generated.resources.cardtwo
 import coco_guard.composeapp.generated.resources.homemain
 import coco_guard.composeapp.generated.resources.logout
+import coco_guard.composeapp.generated.resources.slider1
+import coco_guard.composeapp.generated.resources.slider2
+import coco_guard.composeapp.generated.resources.slider3
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -90,14 +102,17 @@ fun HomeScreen(navController: NavController) {
                             .weight(1f)
                     )
 
-                    Image(
-                        painter = painterResource(Res.drawable.homemain),
-                        contentDescription = "Main",
-                        modifier = Modifier
+                    Card(
+                      modifier = Modifier
                             .fillMaxWidth(1 / 3f)
                             .aspectRatio(154f / 114f)
-                            .padding(start = 0.dp)
-                    )
+                            .padding(start = 0.dp),
+                        shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp),
+                        backgroundColor = Color(0xFF024A1A),
+                        elevation = 8.dp
+                    ) {
+                        ImageSlider()
+                    }
                 }
             }
         }
@@ -137,7 +152,7 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(8.dp),
         elevation = 4.dp
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -178,6 +193,62 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
                 ) {
                     Text(text = "Get Start", color = Color.White)
                 }
+            }
+        }
+    }
+}
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ImageSlider() {
+    val imagesList = listOf(
+        Res.drawable.homemain,
+        Res.drawable.slider1,
+        Res.drawable.slider2,
+        Res.drawable.slider3
+    )
+
+    val pageState = rememberPagerState(pageCount = { imagesList.size })
+    val coroutineScope = rememberCoroutineScope()
+
+    // Auto-scroll
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(3000)
+            coroutineScope.launch {
+                val nextPage = (pageState.currentPage + 1) % imagesList.size
+                pageState.animateScrollToPage(nextPage)
+            }
+        }
+    }
+
+    Box( modifier = Modifier
+        .fillMaxWidth(1 / 3f)
+        .aspectRatio(154f / 114f)
+        .padding(start = 0.dp), contentAlignment = Alignment.CenterEnd) {
+        HorizontalPager(state = pageState) { page ->
+            Image(
+                painter = painterResource(imagesList[page]),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(2.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            repeat(imagesList.size) { iteration ->
+                val color =
+                    if (pageState.currentPage == iteration) Color.White else Color.Gray
+                Box(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(12.dp)
+                )
             }
         }
     }

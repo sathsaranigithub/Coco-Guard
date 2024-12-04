@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.homemain
+import coco_guard.composeapp.generated.resources.second
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
@@ -119,7 +120,7 @@ fun ForecastingQuestionScreen(navController: NavController) {
                     }
 
                     Image(
-                        painter = painterResource(Res.drawable.homemain),
+                        painter = painterResource(Res.drawable.second),
                         contentDescription = "Main",
                         modifier = Modifier
                             .fillMaxWidth(1 / 3f)

@@ -153,7 +153,7 @@ fun LoginPage(
                     // Login Button
                     Button(
                         onClick = {
-                            loading = true
+                            loading = true 
                             errorMessage = null
 
                             if (email.isNotBlank() && password.isNotBlank()) {
