@@ -37,7 +37,42 @@ class FirestoreRepository {
             Result.failure(e)
         }
     }
+    suspend fun addDemand(userEmail: String, demand: Demand): Result<String> {
+        return try {
+            // Reference the user's document using email as the document ID in the demand_forecasting collection
+            val documentRef = db.collection("demand_forecasting")
+                .document(userEmail) // Use the user's email as the document ID
 
+            // Save the demand result under the 'demand' subcollection of the user's document
+            val document = documentRef
+                .collection("demand")
+                .add(demand) // Add the demand document
+                .await()
+
+            Result.success(document.id)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    // Retrieve Demands for a User
+    suspend fun getDemands(userEmail: String): Result<List<Demand>> {
+        return try {
+            val snapshot = db.collection("demand_forecasting")
+                .document(userEmail)
+                .collection("demand")
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val demands = snapshot.documents.map { it.toObject(Demand::class.java)!! }
+                Result.success(demands)
+            } else {
+                Result.failure(Exception("No demands found for the given user."))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
 
     suspend fun getUserByEmail(email: String): User? {

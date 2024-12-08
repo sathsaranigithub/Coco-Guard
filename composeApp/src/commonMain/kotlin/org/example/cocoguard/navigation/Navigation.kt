@@ -31,12 +31,14 @@ import org.example.cocoguard.screens.yield.YieldQuestionScreen
 import org.example.cocoguard.screens.yield.YieldRecordScreen
 import java.security.MessageDigest
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
 
-
+    var loggedInEmail by remember { mutableStateOf<String?>(null) }
 
 
     NavHost(navController = navController, startDestination = "onboard") {
@@ -46,6 +48,9 @@ fun AppNavigation(navController: NavHostController) {
             LoginPage(
                 onNavigateToRegister = { navController.navigate("register") },
                 onNavigateToHome = { navController.navigate("home") },
+                onEmailLoggedIn = { email ->
+                    loggedInEmail = email // Update the state with the logged-in email
+                }
             )
         }
 
@@ -56,12 +61,27 @@ fun AppNavigation(navController: NavHostController) {
             )
         }
 
-        composable("home") { HomeScreen(navController) }
+        composable("home") { HomeScreen(navController, loggedInEmail.toString()) }
         composable("imageUpload") {ImageUploadScreen() }
-        composable("forecastingQuestion") { ForecastingQuestionScreen(navController)}
+//        composable("forecastingQuestion") { ForecastingQuestionScreen(navController)}
+        composable(
+            "forecastingQuestion/{loggedInEmail}",
+            arguments = listOf(navArgument("loggedInEmail") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("loggedInEmail") ?: ""
+            ForecastingQuestionScreen(navController = navController, email = email)
+        }
+
         composable("yieldQuestion") {YieldQuestionScreen(navController)}
         composable("yieldRecord") { YieldRecordScreen() }
-        composable("forecastingRecord") { ForecastingRecordScreen()}
+        composable(
+            route = "forecastingRecord/{email}",
+            arguments = listOf(navArgument("email") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            ForecastingRecordScreen(userEmail = email)
+        }
+
 
     }
 }

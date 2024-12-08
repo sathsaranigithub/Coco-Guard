@@ -2,7 +2,6 @@ package org.example.cocoguard.screens.forecasting
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,10 +23,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.ExposedDropdownMenuDefaults
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -39,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -48,8 +42,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coco_guard.composeapp.generated.resources.Res
-import coco_guard.composeapp.generated.resources.homemain
 import coco_guard.composeapp.generated.resources.second
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -66,12 +60,10 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.example.cocoguard.screens.yield.YieldPredictionRequest
-import org.example.cocoguard.screens.yield.YieldPredictionResponse
-import org.example.cocoguard.screens.yield.YieldResultDialog
-import org.example.cocoguard.screens.yield.fetchYieldPrediction
+import org.example.cocoguard.AuthService
+import org.example.cocoguard.Demand
+import org.example.cocoguard.FirestoreRepository
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
-import org.example.cocoguard.ui.theme.workSansFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 
@@ -81,7 +73,7 @@ data class DemandPredictionResponse(
 )
 
 @Composable
-fun ForecastingQuestionScreen(navController: NavController) {
+fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
     var showDialog by remember { mutableStateOf(false) }
     var predictionResult by remember { mutableStateOf("") }
     var month by remember { mutableStateOf("May") }
@@ -97,6 +89,11 @@ fun ForecastingQuestionScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(false) }
     var showValidationError by remember { mutableStateOf(false) }
     var validationErrorMessage by remember { mutableStateOf("") }
+
+
+
+    val coroutineScope = rememberCoroutineScope()
+    val repository = FirestoreRepository()
     val client = HttpClient(CIO) {
         engine {
             requestTimeout = 60_000
@@ -240,7 +237,7 @@ fun ForecastingQuestionScreen(navController: NavController) {
                         )
 
                         Button(
-                            onClick = { navController.navigate("forecastingRecord") },
+                            onClick = { navController.navigate("forecastingRecord/$email") },
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
                             modifier = Modifier.width(190.dp)
                         ) {
@@ -385,9 +382,31 @@ fun ForecastingQuestionScreen(navController: NavController) {
         DemandResultDialog(
             result = predictionResult,
             onDismiss = { showDialog = false },
-            onSave = { /* Handle save logic */ }
+            onSave = {
+                val email = "$email"
+                // Create an instance of the Demand class
+                val demand = Demand(
+                    month = month,
+                    region = region,
+                    coconutExportVolume = coconutExportVolume,
+                    domesticCoconutConsumption = domesticCoconutConsumption,
+                    coconutPriceLocal = coconutPriceLocal,
+                    internationalCoconutPrice = internationalCoconutPrice,
+                    exportDestinationDemand = exportDestinationDemand,
+                    currencyExchangeRate = currencyExchangeRate,
+                    competitorCountriesProduction = competitorCountriesProduction,
+                    predictionResult = predictionResult
+                )
+                // Log the demand data for debugging
+                println("Saving demand data: $demand")
+                // Save the demand data using Firestore or other persistence methods
+                coroutineScope.launch {
+                    repository.addDemand(email,demand)
+                }
+            }
         )
     }
+
     if (isLoading) {
         Box(
             modifier = Modifier
@@ -485,6 +504,9 @@ fun TextFieldQuestion(question: String, hint: String, value: String, onValueChan
 }
 @Composable
 fun DemandResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit) {
+    val coroutineScope = rememberCoroutineScope()
+    val repository = FirestoreRepository()
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Prediction Result", fontFamily = workSansBoldFontFamily(), fontSize = 25.sp, color = Color(0xFF024A1A)) },
@@ -505,16 +527,16 @@ fun DemandResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit
             }
         },
         confirmButton = {
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),) {
-                Text("Ok")
+            Button(onClick = {
+                onSave()
+                onDismiss()
+            }) {
+                Text("Save")
             }
         },
         dismissButton = {
-            Button(onClick = onSave,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),) {
-                Text("Save")
+            Button(onClick = onDismiss) {
+                Text("Close")
             }
         }
     )

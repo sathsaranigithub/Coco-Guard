@@ -50,7 +50,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun LoginPage(
     onNavigateToRegister: () -> Unit,
-              onNavigateToHome: () -> Unit) {
+              onNavigateToHome: () -> Unit,
+    onEmailLoggedIn: (String) -> Unit){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) } // Loading state
@@ -162,6 +163,7 @@ fun LoginPage(
                                         // Simulated authentication service
                                         val isAuthenticated = authService.signIn(email, password)
                                         if (isAuthenticated) {
+                                            onEmailLoggedIn(email) // Pass the email to the next screen
                                             onNavigateToHome() // Navigate to Home page
                                         } else {
                                             errorMessage = "Invalid Email or Password"
