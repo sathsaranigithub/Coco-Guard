@@ -56,8 +56,10 @@ fun AppNavigation(navController: NavHostController) {
 
         composable("register") {
             RegisterPage(onNavigateToLogin = { navController.navigate("login") },
-                onNavigateToHome = { navController.navigate("home") }
-
+                onNavigateToHome = { navController.navigate("home") },
+                onEmailLoggedIn = { email ->
+                    loggedInEmail = email // Update the state with the logged-in email
+                }
             )
         }
 

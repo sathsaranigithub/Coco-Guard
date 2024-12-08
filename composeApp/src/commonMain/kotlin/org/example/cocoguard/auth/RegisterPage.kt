@@ -59,9 +59,10 @@ import java.security.MessageDigest
 @Composable
 fun RegisterPage(
                  onNavigateToHome: () -> Unit,
-                 onNavigateToLogin: () -> Unit) {
+                 onNavigateToLogin: () -> Unit,
+                 onEmailLoggedIn: (String) -> Unit) {
     var uname by remember { mutableStateOf(TextFieldValue("")) }
-    var email by remember { mutableStateOf(TextFieldValue("")) }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var isPasswordVisible by remember { mutableStateOf(false) } // Track visibility of password
     var loading by remember { mutableStateOf(false) } // Loading state
@@ -172,14 +173,15 @@ fun RegisterPage(
                         onClick = {
                             loading = true
                             errorMessage = null
-                                if (uname.text.isNotBlank() && email.text.isNotBlank() && password.text.isNotBlank()) {
+                                if (uname.text.isNotBlank() && email.isNotBlank() && password.text.isNotBlank()) {
                                     coroutineScope.launch {
                                         try {
                                             val encryptedPassword = encryptPassword(password.text)
-                                            val result = repository.addUser(User(uname.text,email.text, encryptedPassword))
+                                            val result = repository.addUser(User(uname.text,email, encryptedPassword))
                                             withContext(Dispatchers.Main) {
                                                 if (result.isSuccess) {
                                                     onNavigateToHome()
+                                                    onEmailLoggedIn(email)
                                                     errorMessage  = "User added successfully!" // Success message
                                                 } else {
                                                     errorMessage  = "Error: ${result.exceptionOrNull()?.message}" // Error message
