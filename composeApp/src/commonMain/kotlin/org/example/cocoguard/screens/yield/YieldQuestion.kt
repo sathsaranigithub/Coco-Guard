@@ -35,6 +35,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.example.cocoguard.Demand
+import org.example.cocoguard.FirestoreRepository
+import org.example.cocoguard.Yield
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
@@ -43,7 +46,7 @@ data class YieldPredictionResponse(
     val label: Double
 )
 @Composable
-fun YieldQuestionScreen(navController: NavController) {
+fun YieldQuestionScreen(navController: NavController, email: String) {
     var showDialog by remember { mutableStateOf(false) }
     var predictionResult by remember { mutableStateOf("") }
     // State holders for each input field
@@ -57,6 +60,8 @@ fun YieldQuestionScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(false) }
     var showValidationError by remember { mutableStateOf(false) }
     var validationErrorMessage by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+    val repository = FirestoreRepository()
     val client = HttpClient(CIO) {
         engine {
             requestTimeout = 60_000
@@ -197,7 +202,7 @@ fun YieldQuestionScreen(navController: NavController) {
                                 .padding(bottom = 8.dp)
                         )
                         Button(
-                            onClick = { navController.navigate("yieldRecord") },
+                            onClick = { navController.navigate("yieldRecord/$email") },
                             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
                             modifier = Modifier.width(160.dp)
                         ) {
@@ -323,7 +328,17 @@ fun YieldQuestionScreen(navController: NavController) {
         YieldResultDialog(
             result = predictionResult,
             onDismiss = { showDialog = false },
-            onSave = { /* Handle save logic */ }
+            onSave = {
+                val email = "$email"
+                // Create an instance of the Demand class
+                val yield = Yield(soilType,soilPH,humidity,temperature,sunlightHours,month,plantAge,predictionResult)
+                // Log the demand data for debugging
+                println("Saving yield data: $yield")
+                // Save the demand data using Firestore or other persistence methods
+                coroutineScope.launch {
+                    repository.addYield(email,yield)
+                }
+            }
         )
     }
     if (isLoading) {
@@ -429,15 +444,19 @@ fun YieldResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit)
              fontFamily = workSansBoldFontFamily(), fontSize = 20.sp) },
         confirmButton = {
             Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),) {
-                Text("OK")
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
+                onClick = {
+                    onSave()
+                    onDismiss()
+                }) {
+                Text("Save")
             }
         },
         dismissButton = {
-            Button(onClick = onSave,
-                   colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),) {
-                Text("Save")
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B))) {
+                Text("Close")
             }
         }
     )

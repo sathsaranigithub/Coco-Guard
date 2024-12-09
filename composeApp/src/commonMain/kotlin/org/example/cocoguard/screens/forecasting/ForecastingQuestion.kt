@@ -527,7 +527,9 @@ fun DemandResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit
             }
         },
         confirmButton = {
-            Button(onClick = {
+            Button(
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
+                onClick = {
                 onSave()
                 onDismiss()
             }) {
@@ -535,7 +537,9 @@ fun DemandResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B))) {
                 Text("Close")
             }
         }

@@ -7,9 +7,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,12 +27,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.homemain
+import org.example.cocoguard.Demand
+import org.example.cocoguard.FirestoreRepository
+import org.example.cocoguard.Yield
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun YieldRecordScreen() {
+fun YieldRecordScreen(userEmail: String) {
+    val repository = remember { FirestoreRepository() }
+    var yieldRecords by remember { mutableStateOf<List<Yield>>(emptyList()) }
+    var loading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf("") }
     // Existing top card layout
+    // Fetch demands
+    LaunchedEffect(userEmail) {
+        try {
+            loading = true
+            val result = repository.getYield(userEmail)
+            if (result.isSuccess) {
+                yieldRecords = result.getOrNull() ?: emptyList()
+            } else {
+                errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
+            }
+        } catch (e: Exception) {
+            errorMessage = e.message ?: "Unexpected error occurred"
+        } finally {
+            loading = false
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,82 +111,96 @@ fun YieldRecordScreen() {
         }
     }
 
-    val records = listOf(
-        YieldRecord("Loamy", 6.5, 60, 25, 5, "November", 3, 1488),
-        YieldRecord("Loamy", 7.0, 65, 30, 8, "April", 6, 1592),
-        YieldRecord("Sandy Loam", 9.1, 80, 30, 5, "November", 8, 1532)
-    )
-
-    Column(
-        modifier = Modifier
-            .padding(top = 240.dp)
-            .verticalScroll(rememberScrollState()) // Enables scrolling for the table
-    ) {
-        // Table Header
-        Row(
+    // Display Loading or Error
+    if (loading) {
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(Color(0xFFEBFF9A))
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
+                .padding(top = 240.dp),
+            contentAlignment = Alignment.Center
         ) {
-            listOf("Soil type", "Soil PH", "Humidity", "Temperature", "Sunlight hours", "Current month", "Plant age", "Prediction Result").forEach { header ->
-                Column(
-                    modifier = Modifier.weight(1f), // Makes columns equal width
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = header, fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 14.sp)
-                }
-                Divider(modifier = Modifier.width(1.dp).fillMaxHeight().background(Color.Black))
-            }   }
-
-        Divider(color = Color.Gray, thickness = 1.dp)
-
-        // Table Rows
-        records.forEachIndexed { index, record ->
-            val backgroundColor = if (index % 2 == 0) Color.White else Color(0xFFD8F3DC) // Alternating colors
-
+            CircularProgressIndicator()
+        }
+    } else if (errorMessage.isNotEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 240.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Error: $errorMessage", color = Color.Red, fontSize = 16.sp)
+        }
+    } else {
+        // Display Table of Records
+        Column(
+            modifier = Modifier
+                .padding(top = 240.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Table Header
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(backgroundColor)
-                    .padding(end = 5.dp, start = 5.dp),
-
-
+                    .background(Color(0xFFEBFF9A))
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 listOf(
-                    record.soilType,
-                    record.soilPH.toString(),
-                    record.humidity.toString(),
-                    record.temperature.toString(),
-                    record.sunlightHours.toString(),
-                    record.currentMonth,
-                    record.plantAge.toString(),
-                    record.predictionResult.toString()
-                ).forEach { data ->
+                    "Soil type", "Soil PH", "Humidity", "Temperature", "Sunlight hours", "Month", "Plant age", "Yield prediction"
+                ).forEach { header ->
                     Column(
-                        modifier = Modifier.weight(1f), // Ensures equal column width
+                        modifier = Modifier.weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = data, color = Color.Black, fontSize = 14.sp)
+                        Text(
+                            text = header,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            fontSize = 14.sp
+                        )
                     }
-                    Divider(modifier = Modifier.width(1.dp).fillMaxHeight().background(Color.Black))
-                }    }
+                    androidx.compose.material.Divider(
+                        modifier = Modifier.width(1.dp).fillMaxHeight().background(Color.Black)
+                    )
+                }
+            }
 
-            Divider(color = Color.LightGray, thickness = 0.5.dp)
+            androidx.compose.material.Divider(color = Color.Gray, thickness = 1.dp)
+
+            // Table Rows
+            yieldRecords.forEachIndexed { index, record ->
+                val backgroundColor = if (index % 2 == 0) Color.White else Color(0xFFD8F3DC)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundColor)
+                        .padding(5.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    listOf(
+                        record.soilType,
+                        record.soilPH,
+                        record.humidity,
+                        record.temperature,
+                        record.sunlightHours,
+                        record.month,
+                        record.plantAge,
+                        record.predictionResult
+                    ).forEach { data ->
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = data, color = Color.Black, fontSize = 14.sp)
+                        }
+                        androidx.compose.material.Divider(
+                            modifier = Modifier.width(1.dp).fillMaxHeight().background(Color.Black)
+                        )
+                    }
+                }
+                androidx.compose.material.Divider(color = Color.LightGray, thickness = 0.5.dp)
+            }
         }
     }
-}
 
-data class YieldRecord(
-    val soilType: String,
-    val soilPH: Double,
-    val humidity: Int,
-    val temperature: Int,
-    val sunlightHours: Int,
-    val currentMonth: String,
-    val plantAge: Int,
-    val predictionResult: Int
-)
+}

@@ -54,6 +54,23 @@ class FirestoreRepository {
             Result.failure(e)
         }
     }
+    suspend fun addYield(userEmail: String, yield: Yield): Result<String> {
+        return try {
+            // Reference the user's document using email as the document ID in the demand_forecasting collection
+            val documentRef = db.collection("yield_recode")
+                .document(userEmail) // Use the user's email as the document ID
+
+            // Save the demand result under the 'demand' subcollection of the user's document
+            val document = documentRef
+                .collection("yield")
+                .add(yield) // Add the demand document
+                .await()
+
+            Result.success(document.id)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
     // Retrieve Demands for a User
     suspend fun getDemands(userEmail: String): Result<List<Demand>> {
         return try {
@@ -73,7 +90,24 @@ class FirestoreRepository {
             Result.failure(e)
         }
     }
+    suspend fun getYield(userEmail: String): Result<List<Yield>> {
+        return try {
+            val snapshot = db.collection("yield_recode")
+                .document(userEmail)
+                .collection("yield")
+                .get()
+                .await()
 
+            if (!snapshot.isEmpty) {
+                val yields = snapshot.documents.map { it.toObject(Yield::class.java)!! }
+                Result.success(yields)
+            } else {
+                Result.failure(Exception("No demands found for the given user."))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     suspend fun getUserByEmail(email: String): User? {
         val snapshot = db.collection("users")

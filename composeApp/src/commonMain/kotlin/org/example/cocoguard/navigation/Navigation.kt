@@ -73,9 +73,21 @@ fun AppNavigation(navController: NavHostController) {
             val email = backStackEntry.arguments?.getString("loggedInEmail") ?: ""
             ForecastingQuestionScreen(navController = navController, email = email)
         }
+        composable(
+            "yieldQuestion/{loggedInEmail}",
+            arguments = listOf(navArgument("loggedInEmail") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("loggedInEmail") ?: ""
+            YieldQuestionScreen(navController = navController, email = email)
+        }
 
-        composable("yieldQuestion") {YieldQuestionScreen(navController)}
-        composable("yieldRecord") { YieldRecordScreen() }
+        composable(
+            route = "yieldRecord/{email}",
+            arguments = listOf(navArgument("email") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            YieldRecordScreen(userEmail = email)
+        }
         composable(
             route = "forecastingRecord/{email}",
             arguments = listOf(navArgument("email") { type = NavType.StringType })
@@ -83,8 +95,6 @@ fun AppNavigation(navController: NavHostController) {
             val email = backStackEntry.arguments?.getString("email") ?: ""
             ForecastingRecordScreen(userEmail = email)
         }
-
-
     }
 }
 
