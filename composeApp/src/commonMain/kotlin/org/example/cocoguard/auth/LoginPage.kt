@@ -38,7 +38,8 @@ import org.jetbrains.compose.resources.painterResource
 fun LoginPage(
     onNavigateToRegister: () -> Unit,
     onNavigateToHome: () -> Unit,
-    onEmailLoggedIn: (String) -> Unit){
+    onEmailLoggedIn: (String) -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) }
@@ -75,10 +76,12 @@ fun LoginPage(
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 ),
-                modifier = Modifier.padding(bottom = 40.dp).align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .padding(bottom = 40.dp)
+                    .align(Alignment.CenterHorizontally)
             )
             Text(
-                text = "Welcome to CocoGuard: Empowering Coconut Farmers with AI Solutions",
+                text = "Welcome to CocoGuard Empowering Coconut Farmers with AI Solutions",
                 style = TextStyle(
                     fontFamily = workSansSemiBoldFontFamily(),
                     fontSize = 18.sp,
@@ -96,7 +99,7 @@ fun LoginPage(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp) // Padding inside the card
+                        .padding(16.dp)
                 ) {
                     TextField(
                         value = email,
@@ -122,54 +125,67 @@ fun LoginPage(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(20.dp))
-                    Button(
-                        onClick = {
-                            loading = true 
-                            errorMessage = null
-
-                            if (email.isNotBlank() && password.isNotBlank()) {
-                                coroutineScope.launch {
-                                    try {
-                                        // Simulated authentication service
-                                        val isAuthenticated = authService.signIn(email, password)
-                                        if (isAuthenticated) {
-                                            onEmailLoggedIn(email) // Pass the email to the next screen
-                                            onNavigateToHome() // Navigate to Home page
-                                        } else {
-                                            errorMessage = "Invalid Email or Password"
-                                        }
-                                    } catch (e: Exception) {
-                                        errorMessage = "Error: ${e.message}"
-                                    } finally {
-                                        loading = false
-                                    }
-                                }
-                            } else {
-                                errorMessage = "Please fill in both fields."
-                                loading = false
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .padding(vertical = 10.dp)
-                    ) {
-                        Text(
-                            text = "Login",
-                            color = Color.White,
-                            style = TextStyle(fontSize = 18.sp)
+                    if (loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            color = Color(0xFF4CAF50)
                         )
-                    }
+                    } else {
+                        Button(
+                            onClick = {
+                                loading = true
+                                errorMessage = null
 
+                                if (email.isNotBlank() && password.isNotBlank()) {
+                                    coroutineScope.launch {
+                                        try {
+                                            val isAuthenticated = authService.signIn(email, password)
+                                            if (isAuthenticated) {
+                                                onEmailLoggedIn(email)
+                                                onNavigateToHome()
+                                            } else {
+                                                errorMessage = "Invalid Email or Password"
+                                            }
+                                        } catch (e: Exception) {
+                                            errorMessage = "Error: ${e.message}"
+                                        } finally {
+                                            loading = false
+                                        }
+                                    }
+                                } else {
+                                    errorMessage = "Please fill in both fields."
+                                    loading = false
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .padding(vertical = 10.dp)
+                        ) {
+                            Text(
+                                text = "Login",
+                                color = Color.White,
+                                style = TextStyle(fontSize = 18.sp)
+                            )
+                        }
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(30.dp))
+            errorMessage?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    style = TextStyle(fontSize = 14.sp),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
             Image(
                 painter = painterResource(Res.drawable.logo),
                 contentDescription = "App Logo",
                 modifier = Modifier
-                    .size(100.dp) // Set the size for the logo
+                    .size(100.dp)
                     .padding(bottom = 8.dp)
             )
             Text(
@@ -182,7 +198,7 @@ fun LoginPage(
                 )
             )
             TextButton(
-                onClick = onNavigateToRegister, // Navigate to RegisterPage
+                onClick = onNavigateToRegister,
                 modifier = Modifier.padding(bottom = 5.dp)
             ) {
                 Text(

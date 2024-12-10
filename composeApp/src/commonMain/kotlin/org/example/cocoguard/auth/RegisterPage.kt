@@ -43,35 +43,27 @@ import coco_guard.composeapp.generated.resources.register
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.example.cocoguard.AuthService
 import org.example.cocoguard.FirestoreRepository
 import org.example.cocoguard.User
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
 import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
-//import org.example.cocoguard.utils.AuthUtil
 import org.jetbrains.compose.resources.painterResource
-import java.lang.System.getProperty
 import java.security.MessageDigest
-
-
 @Composable
 fun RegisterPage(
-                 onNavigateToHome: () -> Unit,
-                 onNavigateToLogin: () -> Unit,
-                 onEmailLoggedIn: (String) -> Unit) {
+    onNavigateToHome: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onEmailLoggedIn: (String) -> Unit
+) {
     var uname by remember { mutableStateOf(TextFieldValue("")) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf(TextFieldValue("")) }
-    var isPasswordVisible by remember { mutableStateOf(false) } // Track visibility of password
     var loading by remember { mutableStateOf(false) } // Loading state
     var errorMessage by remember { mutableStateOf<String?>(null) } // Error state
     val coroutineScope = rememberCoroutineScope()
     val repository = FirestoreRepository()
-    val authService = AuthService(repository)
-
-
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -85,7 +77,6 @@ fun RegisterPage(
                 .fillMaxWidth(0.3f),
             contentScale = ContentScale.Crop
         )
-
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -94,7 +85,6 @@ fun RegisterPage(
                 .padding(24.dp)
         ) {
             Spacer(modifier = Modifier.height(10.dp))
-
             Text(
                 text = "Let's Create your account",
                 style = TextStyle(
@@ -108,7 +98,6 @@ fun RegisterPage(
                     .padding(bottom = 40.dp)
                     .align(Alignment.CenterHorizontally)
             )
-
             Text(
                 text = "Join CocoGuard and protect your farm with AI",
                 style = TextStyle(
@@ -120,7 +109,6 @@ fun RegisterPage(
                 ),
                 modifier = Modifier.padding(bottom = 20.dp)
             )
-
             Card(
                 shape = RoundedCornerShape(10.dp),
                 elevation = 4.dp,
@@ -143,25 +131,22 @@ fun RegisterPage(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-
                     TextField(
                         value = email,
                         onValueChange = { email = it },
                         label = { Text("E-mail") },
-                                colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.Transparent,
                             textColor = Color.Black
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-
                     TextField(
                         value = password,
                         onValueChange = { password = it },
                         label = { Text("Password") },
-
-                                visualTransformation = PasswordVisualTransformation(),
+                        visualTransformation = PasswordVisualTransformation(),
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.Transparent,
                             textColor = Color.Black
@@ -169,73 +154,80 @@ fun RegisterPage(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(20.dp))
-                    Button(
-                        onClick = {
-                            loading = true
-                            errorMessage = null
+                    if (loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            color = Color(0xFF4CAF50)
+                        )
+                    } else {
+                        Button(
+                            onClick = {
+                                loading = true
+                                errorMessage = null
                                 if (uname.text.isNotBlank() && email.isNotBlank() && password.text.isNotBlank()) {
                                     coroutineScope.launch {
                                         try {
                                             val encryptedPassword = encryptPassword(password.text)
-                                            val result = repository.addUser(User(uname.text,email, encryptedPassword))
+                                            val result = repository.addUser(
+                                                User(
+                                                    uname.text,
+                                                    email,
+                                                    encryptedPassword
+                                                )
+                                            )
                                             withContext(Dispatchers.Main) {
+                                                loading = false // Hide loading
                                                 if (result.isSuccess) {
                                                     onNavigateToHome()
                                                     onEmailLoggedIn(email)
-                                                    errorMessage  = "User added successfully!" // Success message
                                                 } else {
-                                                    errorMessage  = "Error: ${result.exceptionOrNull()?.message}" // Error message
+                                                    errorMessage =
+                                                        "Error: ${result.exceptionOrNull()?.message}"
                                                 }
                                             }
                                         } catch (e: Exception) {
                                             withContext(Dispatchers.Main) {
-                                                loading = false // Hide loading
-                                                errorMessage  = "Error: ${e.message}" // Error message
+                                                loading = false
+                                                errorMessage = "Error: ${e.message}"
                                             }
                                         }
                                     }
                                 } else {
-                                    errorMessage  = "Please fill in both fields."
                                     loading = false
+                                    errorMessage = "All fields are required."
                                 }
-
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .padding(vertical = 10.dp)
-                    ) {
-                        if (loading) {
-                            CircularProgressIndicator(
-                                color = Color(0xFF4CAF50),
-                                modifier = Modifier.size(18.dp)
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .padding(vertical = 10.dp)
+                        ) {
+                            Text(
+                                text = "Register",
+                                color = Color.White,
+                                style = TextStyle(fontSize = 18.sp)
                             )
-                        } else {
-                            Text("Register", color = Color.White)
                         }
                     }
-//                    errorMessage?.let {
-//                        Text(
-//                            text = it,
-//                            color = Color.Red,
-//                            style = TextStyle(fontSize = 14.sp),
-//                            modifier = Modifier.padding(top = 10.dp)
-//                        )
-//                    }
+                    errorMessage?.let {
+                        Text(
+                            text = it,
+                            color = Color.Red,
+                            style = TextStyle(fontSize = 14.sp),
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
                 }
             }
-
             Spacer(modifier = Modifier.height(30.dp))
-
             Image(
                 painter = painterResource(Res.drawable.logo),
                 contentDescription = "App Logo",
                 modifier = Modifier
                     .size(100.dp)
                     .padding(bottom = 8.dp)
-            )
-
+                )
             Text(
                 text = "Coco Guard",
                 style = TextStyle(
@@ -245,7 +237,6 @@ fun RegisterPage(
                     color = Color(0xFF4CAF50)
                 )
             )
-
             TextButton(
                 onClick = onNavigateToLogin,
                 modifier = Modifier.padding(bottom = 5.dp)
