@@ -1,9 +1,14 @@
 package org.example.cocoguard.screens.forecasting
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.homemain
 import kotlinx.coroutines.launch
@@ -23,11 +29,14 @@ import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun ForecastingRecordScreen(userEmail: String) {
+fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
     val repository = remember { FirestoreRepository() }
     var demandRecords by remember { mutableStateOf<List<Demand>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
 
     // Fetch demands
     LaunchedEffect(userEmail) {
@@ -61,7 +70,32 @@ fun ForecastingRecordScreen(userEmail: String) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
+            ) {Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                        shape = CircleShape
+                    )
             ) {
+                IconButton(
+                    onClick = {
+                        navController.navigate("home") { // Navigate to the home route
+                            popUpTo("image_upload") { inclusive = true } // Clear the stack if needed
+                        }
+                    },
+                    modifier = Modifier
+                        .size(48.dp),
+                    interactionSource = interactionSource
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White // Icon remains white
+                    )
+                }
+            }
+
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(color = Color.White)) {

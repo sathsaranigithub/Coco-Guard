@@ -5,9 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -32,52 +26,39 @@ import androidx.compose.ui.unit.sp
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.logo
 import coco_guard.composeapp.generated.resources.register
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.example.cocoguard.AuthService
 import org.example.cocoguard.FirestoreRepository
-
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
 import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
-//import org.example.cocoguard.utils.AuthUtil
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.FontResource
 import org.jetbrains.compose.resources.painterResource
-
 @Composable
 fun LoginPage(
     onNavigateToRegister: () -> Unit,
-              onNavigateToHome: () -> Unit,
+    onNavigateToHome: () -> Unit,
     onEmailLoggedIn: (String) -> Unit){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var loading by remember { mutableStateOf(false) } // Loading state
-    var errorMessage by remember { mutableStateOf<String?>(null) } // Error state
+    var loading by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val repository = FirestoreRepository()
     val authService = AuthService(repository)
-
-
-
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White) // Set the background to white
+            .background(Color.White)
     ) {
-        // Image aligned to the left, matching parent height
         Image(
             painter = painterResource(Res.drawable.register),
             contentDescription = "Coconut background",
             modifier = Modifier
-                .fillMaxHeight() // Match the parent's height
-                .fillMaxWidth(0.3f), // Set the width to 30% of the screen
+                .fillMaxHeight()
+                .fillMaxWidth(0.3f),
             contentScale = ContentScale.Crop
         )
-
-        // Content aligned to the right
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,9 +66,7 @@ fun LoginPage(
                 .fillMaxSize()
                 .padding(24.dp)
         ) {
-            Spacer(modifier = Modifier.height(10.dp)) // Add padding from top
-
-            // Welcome Text
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = "Welcome back",
                 style = TextStyle(
@@ -98,8 +77,6 @@ fun LoginPage(
                 ),
                 modifier = Modifier.padding(bottom = 40.dp).align(Alignment.CenterHorizontally)
             )
-
-            // Subheading Text
             Text(
                 text = "Welcome to CocoGuard: Empowering Coconut Farmers with AI Solutions",
                 style = TextStyle(
@@ -111,8 +88,6 @@ fun LoginPage(
                 ),
                 modifier = Modifier.padding(bottom = 20.dp)
             )
-
-            // Card for Email, Password, and Login Button
             Card(
                 shape = RoundedCornerShape(10.dp),
                 elevation = 4.dp,
@@ -123,7 +98,6 @@ fun LoginPage(
                         .fillMaxWidth()
                         .padding(16.dp) // Padding inside the card
                 ) {
-                    // Email TextField
                     TextField(
                         value = email,
                         onValueChange = { email = it },
@@ -135,8 +109,6 @@ fun LoginPage(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-
-                    // Password TextField with toggle icon
                     var passwordVisible by remember { mutableStateOf(false) }
                     TextField(
                         value = password,
@@ -150,8 +122,6 @@ fun LoginPage(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(20.dp))
-
-                    // Login Button
                     Button(
                         onClick = {
                             loading = true 
@@ -194,18 +164,14 @@ fun LoginPage(
 
                 }
             }
-            Spacer(modifier = Modifier.height(30.dp)) // Space between button and logo
-
-            // Logo Image
+            Spacer(modifier = Modifier.height(30.dp))
             Image(
-                painter = painterResource(Res.drawable.logo), // Replace with your logo resource
+                painter = painterResource(Res.drawable.logo),
                 contentDescription = "App Logo",
                 modifier = Modifier
                     .size(100.dp) // Set the size for the logo
                     .padding(bottom = 8.dp)
             )
-
-            // App Name Text
             Text(
                 text = "Coco Guard",
                 style = TextStyle(
@@ -215,7 +181,6 @@ fun LoginPage(
                     color = Color(0xFF4CAF50)
                 )
             )
-            // Register Link
             TextButton(
                 onClick = onNavigateToRegister, // Navigate to RegisterPage
                 modifier = Modifier.padding(bottom = 5.dp)

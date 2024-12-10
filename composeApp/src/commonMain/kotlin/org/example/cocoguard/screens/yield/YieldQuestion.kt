@@ -3,10 +3,15 @@ package org.example.cocoguard.screens.yield
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,6 +67,8 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
     var validationErrorMessage by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     val repository = FirestoreRepository()
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
     val client = HttpClient(CIO) {
         engine {
             requestTimeout = 60_000
@@ -165,7 +172,31 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
+            ) {Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                        shape = CircleShape
+                    )
             ) {
+                IconButton(
+                    onClick = {
+                        navController.navigate("home") {
+                        }
+                    },
+                    modifier = Modifier
+                        .size(48.dp),
+                    interactionSource = interactionSource
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White // Icon remains white
+                    )
+                }
+            }
+
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(color = Color.White)) {

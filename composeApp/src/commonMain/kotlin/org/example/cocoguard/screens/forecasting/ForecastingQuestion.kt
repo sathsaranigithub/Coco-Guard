@@ -2,6 +2,8 @@ package org.example.cocoguard.screens.forecasting
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
@@ -23,9 +27,13 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,6 +97,8 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
     var isLoading by remember { mutableStateOf(false) }
     var showValidationError by remember { mutableStateOf(false) }
     var validationErrorMessage by remember { mutableStateOf("") }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
 
 
@@ -198,7 +208,31 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
+            ) {Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                        shape = CircleShape
+                    )
             ) {
+                IconButton(
+                    onClick = {
+                        navController.navigate("home") {
+                        }
+                    },
+                    modifier = Modifier
+                        .size(48.dp),
+                    interactionSource = interactionSource
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White // Icon remains white
+                    )
+                }
+            }
+
                 // Title
                 Text(
                     text = buildAnnotatedString {
@@ -225,8 +259,7 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
-                    ) {
-                        Text(
+                    ) {  Text(
                             text = "Leveraging AI for coconut demand forecasting provides accurate, data-driven insights into market trends",
                             color = Color.White,
                             fontSize = 16.sp,

@@ -2,8 +2,13 @@ package org.example.cocoguard.screens.disease
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -61,7 +67,13 @@ import kotlinx.serialization.json.Json
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.first
 import coco_guard.composeapp.generated.resources.gallery
@@ -81,7 +93,7 @@ fun parseDiseaseFromResponse(response: String): String {
     }
 }
 @Composable
-fun ImageUploadScreen() {
+fun ImageUploadScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val context = com.mohamedrejeb.calf.core.LocalPlatformContext.current
     var byteArray = remember { mutableStateOf(ByteArray(0)) }
@@ -90,6 +102,8 @@ fun ImageUploadScreen() {
     var isLoading = remember { mutableStateOf(false) }
     var detectedDisease = remember { mutableStateOf("") }
     var showDialog = remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
 
     // Use a lambda to configure the file picker launcher
@@ -124,6 +138,33 @@ fun ImageUploadScreen() {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                            shape = CircleShape
+                        )
+                ) {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("home") {
+                            }
+                        },
+                        modifier = Modifier
+                            .size(48.dp),
+                        interactionSource = interactionSource
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White // Icon remains white
+                        )
+                    }
+                }
+
+
+                Spacer(modifier = Modifier.width(8.dp))
                 // Title
                 Text(
                     text = buildAnnotatedString {
@@ -200,7 +241,7 @@ fun ImageUploadScreen() {
 
             // Text area with upload button
             Column(
-               modifier = Modifier
+                modifier = Modifier
                     .padding(start = 16.dp)
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.Center
@@ -261,23 +302,23 @@ fun ImageUploadScreen() {
             }
         }
         LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .weight(1f)
-            ) {
-                item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 10.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        elevation = 4.dp
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            if (detectedDisease.value.isNotEmpty()) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .weight(1f)
+        ) {
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = 4.dp
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        if (detectedDisease.value.isNotEmpty()) {
 
-                                if(detectedDisease.value != "Unknown disease" && detectedDisease.value != "Unknown Class"){
+                            if(detectedDisease.value != "Unknown disease" && detectedDisease.value != "Unknown Class"){
                                 Text(
                                     text = "Detected disease: ${detectedDisease.value}",
                                     fontSize = 18.sp,
@@ -340,14 +381,14 @@ fun ImageUploadScreen() {
                                     },   fontSize = 14.sp,
                                     color = Color.Gray
                                 )
-                                }
-                                else{
-                                    showAlertDialog(onDismiss = { showDialog.value = false })
-                                }
+                            }
+                            else{
+                                showAlertDialog(onDismiss = { showDialog.value = false })
                             }
                         }
                     }
                 }
+            }
         }
     }
 }
@@ -355,12 +396,12 @@ suspend fun uploadImage(imageBytes: ByteArray): String {
     val client = HttpClient(CIO) {
         install(Logging) {
             level = LogLevel.INFO}
-            engine {
-                endpoint {
-                    connectTimeout = 60000
-                    requestTimeout = 60000
-                    socketTimeout = 60000
-                }
+        engine {
+            endpoint {
+                connectTimeout = 60000
+                requestTimeout = 60000
+                socketTimeout = 60000
+            }
         }
     }
 

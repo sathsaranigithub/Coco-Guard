@@ -2,14 +2,21 @@ package org.example.cocoguard.screens.yield
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.homemain
 import org.example.cocoguard.Demand
@@ -34,11 +42,13 @@ import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun YieldRecordScreen(userEmail: String) {
+fun YieldRecordScreen(navController: NavController, userEmail: String) {
     val repository = remember { FirestoreRepository() }
     var yieldRecords by remember { mutableStateOf<List<Yield>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
     // Existing top card layout
     // Fetch demands
     LaunchedEffect(userEmail) {
@@ -69,7 +79,30 @@ fun YieldRecordScreen(userEmail: String) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
+        ) {Box(
+            modifier = Modifier
+                .size(48.dp)
+                .background(
+                    color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                    shape = CircleShape
+                )
         ) {
+            IconButton(
+                onClick = {
+                    navController.navigate("home") {
+                    }
+                },
+                modifier = Modifier
+                    .size(48.dp),
+                interactionSource = interactionSource
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White // Icon remains white
+                )
+            }
+        }
             // Title
             Text(
                 text = buildAnnotatedString {

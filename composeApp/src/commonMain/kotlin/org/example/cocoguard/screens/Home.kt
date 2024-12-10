@@ -4,18 +4,29 @@ package org.example.cocoguard.screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +56,9 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun HomeScreen(navController: NavController, loggedInEmail: String) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val showLogoutDialog = remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
 
         // Non-scrollable main green card at the top
@@ -62,15 +76,30 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                // Logout Icon
-                Image(
-                    painter = painterResource(Res.drawable.logout),
-                    contentDescription = "Logout",
-                    modifier = Modifier
-                        .size(30.dp)
-                        .padding(start = 12.dp, top = 10.dp)
-                )
 
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                            shape = CircleShape
+                        )
+                ) {
+                    IconButton(
+                        onClick = {
+                            showLogoutDialog.value = true
+                        },
+                        modifier = Modifier
+                            .size(52.dp),
+                        interactionSource = interactionSource
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "logout",
+                            tint = Color.White // Icon remains white
+                        )
+                    }
+                }
                 // Title
                 Text(
                     text = buildAnnotatedString {
@@ -144,6 +173,37 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
             }
         }
     }
+    if (showLogoutDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog.value = false }, // Dismiss dialog on outside tap
+            title = {
+                Text(text = "Logout",fontFamily = workSansBoldFontFamily(), fontSize = 25.sp, color = Color(0xFF024A1A))
+            },
+            text = {
+                Text(text="Are you sure you want to log out?",fontFamily = workSansBoldFontFamily(), fontSize = 20.sp)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutDialog.value = false // Close dialog
+                        navController.navigate("login") {
+                            popUpTo("home") { inclusive = true } // Clear backstack
+                        }
+                    }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B))
+                ) {
+                    Text("Yes", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showLogoutDialog.value = false } ,
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B))
+                ) {
+                    Text("No")
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -197,6 +257,7 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
         }
     }
 }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageSlider() {
@@ -253,3 +314,4 @@ fun ImageSlider() {
         }
     }
 }
+
