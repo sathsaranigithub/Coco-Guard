@@ -25,6 +25,7 @@ import coco_guard.composeapp.generated.resources.homemain
 import kotlinx.coroutines.launch
 import org.example.cocoguard.Demand
 import org.example.cocoguard.FirestoreRepository
+import org.example.cocoguard.screens.component.HeaderCardOne
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
@@ -56,92 +57,24 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
     }
 
 
-        // Top Card Layout
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(210.dp)
-                .padding(0.dp),
-            shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp),
-            backgroundColor = Color(0xFF024A1A),
-            elevation = 8.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
-                        shape = CircleShape
-                    )
-            ) {
-                IconButton(
-                    onClick = {
-                        navController.navigate("home") { // Navigate to the home route
-                            popUpTo("image_upload") { inclusive = true } // Clear the stack if needed
-                        }
-                    },
-                    modifier = Modifier
-                        .size(48.dp),
-                    interactionSource = interactionSource
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White // Icon remains white
-                    )
-                }
+    Column(modifier = Modifier.fillMaxSize()) {
+        HeaderCardOne(
+            title = "Coconut Demand Forecast\n",
+            subtitle = "Record History",
+            sentence = "Enabling producers and distributors to make informed decisions",
+            navController = navController,
+            painter = painterResource(Res.drawable.homemain),
+            onBackClick = {
+                navController.navigate("home")
             }
-
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.White)) {
-                            append("Coconut Demand\n")
-                        }
-                        withStyle(style = SpanStyle(color = Color(0xFF4CAF50))) {
-                            append("Forecast History")
-                        }
-                    },
-                    fontSize = 30.sp,
-                    fontFamily = workSansBoldFontFamily(),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 10.dp)
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 0.dp, bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Enabling producers and distributors to make informed decisions",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontFamily = workSansBoldFontFamily(),
-                        modifier = Modifier.weight(1f)
-                    )
-                    Image(
-                        painter = painterResource(Res.drawable.homemain),
-                        contentDescription = "Main",
-                        modifier = Modifier
-                            .fillMaxWidth(1 / 3f)
-                            .aspectRatio(154f / 114f)
-                            .padding(start = 0.dp)
-                    )
-                }
-            }
-        }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Display Loading or Error
         if (loading) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 240.dp),
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
@@ -149,8 +82,7 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
         } else if (errorMessage.isNotEmpty()) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 240.dp),
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = "Error: $errorMessage", color = Color.Red, fontSize = 16.sp)
@@ -159,7 +91,6 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
             // Display Table of Records
             Column(
                 modifier = Modifier
-                    .padding(top = 240.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 // Table Header
@@ -173,7 +104,7 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
                     listOf(
                         "Month", "Region", "Export (kg)", "Consumption (kg)",
                         "Price (LKR/kg)", "Intl. Price (USD/kg)", "Export Demand (kg)",
-                        "Exchange Rate", "Competitor Production (kg)","Demand forecasting"
+                        "Exchange Rate", "Competitor Production (kg)", "Demand forecasting"
                     ).forEach { header ->
                         Column(
                             modifier = Modifier.weight(1f),
@@ -186,7 +117,9 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
                                 fontSize = 14.sp
                             )
                         }
-                        Divider(modifier = Modifier.width(1.dp).fillMaxHeight().background(Color.Black))
+                        Divider(
+                            modifier = Modifier.width(1.dp).fillMaxHeight().background(Color.Black)
+                        )
                     }
                 }
 
@@ -220,12 +153,15 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
                             ) {
                                 Text(text = data, color = Color.Black, fontSize = 14.sp)
                             }
-                            Divider(modifier = Modifier.width(1.dp).fillMaxHeight().background(Color.Black))
+                            Divider(
+                                modifier = Modifier.width(1.dp).fillMaxHeight()
+                                    .background(Color.Black)
+                            )
                         }
                     }
                     Divider(color = Color.LightGray, thickness = 0.5.dp)
                 }
             }
         }
-
+    }
 }

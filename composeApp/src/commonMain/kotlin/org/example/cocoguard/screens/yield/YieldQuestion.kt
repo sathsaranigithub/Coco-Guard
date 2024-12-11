@@ -43,6 +43,7 @@ import kotlinx.serialization.json.Json
 import org.example.cocoguard.Demand
 import org.example.cocoguard.FirestoreRepository
 import org.example.cocoguard.Yield
+import org.example.cocoguard.screens.component.HeaderCardTwo
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
@@ -159,103 +160,17 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
         }
     }
     Column(modifier = Modifier.fillMaxSize()) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(270.dp)
-                .padding(0.dp),
-            shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp),
-            backgroundColor = Color(0xFF024A1A),
-            elevation = 8.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
-                        shape = CircleShape
-                    )
-            ) {
-                IconButton(
-                    onClick = {
-                        navController.navigate("home") {
-                        }
-                    },
-                    modifier = Modifier
-                        .size(48.dp),
-                    interactionSource = interactionSource
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White // Icon remains white
-                    )
-                }
-            }
+        HeaderCardTwo(
+            navController = navController,
+            title = "AI-Powered Coconut\n",
+            subtitle = "Yield Prediction",
+            description = "Examination of the critical factors influencing coconut yield and analyze improving techniques.",
+            buttonText = "Yield Record",
+            buttonAction = { navController.navigate("yieldRecord/$email") },
+            painter = painterResource(Res.drawable.homemain),
+            isPressed = isPressed
+        )
 
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.White)) {
-                            append("AI-Powered Coconut")
-                        }
-                        withStyle(style = SpanStyle(color = Color(0xFF4CAF50))) {
-                            append(" Yield Prediction")
-                        }
-                    },
-                    fontSize = 30.sp,
-                    fontFamily = workSansBoldFontFamily(),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 10.dp)
-                )
-                // Card Content
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 0.dp, bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp)
-                    ) {
-                        Text(
-                            text = "Examination of the critical factors influencing coconut yield and suggest improving techniques.",
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontFamily = workSansBoldFontFamily(),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
-                        )
-                        Button(
-                            onClick = { navController.navigate("yieldRecord/$email") },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
-                            modifier = Modifier.width(160.dp)
-                        ) {
-                            Text(
-                                text = "Yield Record",
-                                color = Color.White,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                    Image(
-                        painter = painterResource(Res.drawable.homemain),
-                        contentDescription = "Main",
-                        modifier = Modifier
-                            .fillMaxWidth(1 / 3f)
-                            .aspectRatio(154f / 114f)
-                            .padding(start = 0.dp)
-                    )
-                }
-            }
-        }
         Spacer(modifier = Modifier.height(16.dp))
         // Questions Section
         LazyColumn(

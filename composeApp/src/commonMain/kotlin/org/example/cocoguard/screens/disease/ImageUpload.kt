@@ -73,12 +73,14 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.first
 import coco_guard.composeapp.generated.resources.gallery
 import coco_guard.composeapp.generated.resources.homemain
 import coco_guard.composeapp.generated.resources.uploadimage
+import org.example.cocoguard.screens.component.HeaderCardOne
 
 @Serializable
 data class DetectionResult(val `class`: String) // Use backticks if "class" is a reserved keyword
@@ -123,89 +125,16 @@ fun ImageUploadScreen(navController: NavController) {
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        // Existing top card layout
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(260.dp)
-                .padding(0.dp),
-            shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp),
-            backgroundColor = Color(0xFF024A1A),
-            elevation = 8.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(
-                            color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
-                            shape = CircleShape
-                        )
-                ) {
-                    IconButton(
-                        onClick = {
-                            navController.navigate("home") {
-                            }
-                        },
-                        modifier = Modifier
-                            .size(48.dp),
-                        interactionSource = interactionSource
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White // Icon remains white
-                        )
-                    }
-                }
-
-
-                Spacer(modifier = Modifier.width(8.dp))
-                // Title
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.White)) {
-                            append("Coconut Trees Diseases")
-                        }
-                        withStyle(style = SpanStyle(color = Color(0xFF4CAF50))) {
-                            append(" Identification")
-                        }
-                    },
-                    fontSize = 30.sp,
-                    fontFamily = workSansBoldFontFamily(),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 10.dp)
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 0.dp, bottom = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Upload an image to detect coconut tree diseases and receive AI-driven treatment suggestions.",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontFamily = workSansBoldFontFamily(),
-                        modifier = Modifier.weight(1f)
-                    )
-                    Image(
-                        painter = painterResource(Res.drawable.first),
-                        contentDescription = "Main",
-                        modifier = Modifier
-                            .fillMaxWidth(1 / 3f)
-                            .aspectRatio(154f / 114f)
-                            .padding(start = 0.dp)
-                    )
-                }
+        HeaderCardOne(
+            title = "Coconut Trees Diseases\n",
+            subtitle = "Identification",
+            sentence= "Upload an image to detect coconut tree diseases and receive AI-driven treatment suggestions",
+            navController = navController,
+            painter = painterResource(Res.drawable.first),
+            onBackClick = {
+                navController.navigate("home")
             }
-        }
-
+        )
         // Row layout with image card and upload button
         Row(
             modifier = Modifier
