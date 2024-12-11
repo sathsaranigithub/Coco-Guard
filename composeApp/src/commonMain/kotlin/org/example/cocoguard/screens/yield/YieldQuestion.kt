@@ -1,31 +1,21 @@
 package org.example.cocoguard.screens.yield
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.homemain
-import coco_guard.composeapp.generated.resources.third
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -40,10 +30,12 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.example.cocoguard.Demand
 import org.example.cocoguard.FirestoreRepository
 import org.example.cocoguard.Yield
+import org.example.cocoguard.screens.component.DropdownQuestion
 import org.example.cocoguard.screens.component.HeaderCardTwo
+import org.example.cocoguard.screens.component.ResultDialog
+import org.example.cocoguard.screens.component.TextFieldQuestion
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
@@ -271,8 +263,10 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
         }
     }
     if (showDialog) {
-        YieldResultDialog(
-            result = predictionResult,
+        ResultDialog(
+            title = "Prediction Result",
+            resultText = "Yield Prediction: $predictionResult kg",
+            detailedText = "Predict that the yield per tree can provide the number of kilograms $predictionResult kg  of coconuts produced within a year",
             onDismiss = { showDialog = false },
             onSave = {
                 val email = "$email"
@@ -300,112 +294,6 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
             )
         }
     }
-}
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun DropdownQuestion(question: String, options: List<String>, hint: String, onSelect: (String) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(hint) }
-    Column {
-        Text(
-            text = question,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            TextField(
-                value = selectedOption,
-                onValueChange = { },
-                readOnly = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(10.dp))
-                    .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.White,
-                    focusedIndicatorColor = Color.Transparent, // Dark green
-                    unfocusedIndicatorColor = Color.Transparent, // No underline when not focused
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Red
-                ),
-                shape = RoundedCornerShape(10.dp)
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedOption = option
-                            onSelect(option)
-                            expanded = false
-                        }
-                    ) {
-                        Text(text = option)
-                    }
-                }
-            }
-        }
-    }
-}
-@Composable
-fun TextFieldQuestion(question: String, hint: String, value: String, onValueChange: (String) -> Unit) {
-    Column {
-        Text(
-            text = question,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            label = { Text(text = hint, color = Color(0xFF4CAF50)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White, shape = RoundedCornerShape(10.dp))
-                .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Red
-            ),
-            shape = RoundedCornerShape(10.dp)
-        )
-    }
-}
-@Composable
-fun YieldResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Prediction Result", fontFamily = workSansBoldFontFamily(), fontSize = 25.sp, color = Color(0xFF024A1A)) },
-        text = { Text("Yield Prediction: $result",
-             fontFamily = workSansBoldFontFamily(), fontSize = 20.sp) },
-        confirmButton = {
-            Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
-                onClick = {
-                    onSave()
-                    onDismiss()
-                }) {
-                Text("Save")
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B))) {
-                Text("Close")
-            }
-        }
-    )
 }
 @Serializable
 data class YieldPredictionRequest(

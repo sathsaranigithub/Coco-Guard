@@ -1,7 +1,5 @@
 package org.example.cocoguard.screens.forecasting
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -9,31 +7,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,13 +27,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.second
@@ -68,10 +48,12 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.example.cocoguard.AuthService
 import org.example.cocoguard.Demand
 import org.example.cocoguard.FirestoreRepository
+import org.example.cocoguard.screens.component.DropdownQuestion
 import org.example.cocoguard.screens.component.HeaderCardTwo
+import org.example.cocoguard.screens.component.ResultDialog
+import org.example.cocoguard.screens.component.TextFieldQuestion
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
@@ -323,8 +305,10 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
         }
     }
     if (showDialog) {
-        DemandResultDialog(
-            result = predictionResult,
+        ResultDialog(
+            title = "Prediction Result",
+            resultText = "Demand Forecasting Prediction: $predictionResult kg",
+            detailedText = "The forecast predicts that the coconut demand will reach approximately $predictionResult kg for the selected month and region, based on the provided parameters.",
             onDismiss = { showDialog = false },
             onSave = {
                 val email = "$email"
@@ -366,129 +350,6 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun DropdownQuestion(question: String, options: List<String>, hint: String, onSelect: (String) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(hint) }
-    Column {
-        Text(
-            text = question,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            TextField(
-                value = selectedOption,
-                onValueChange = { },
-                readOnly = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(10.dp))
-                    .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.White,
-                    focusedIndicatorColor = Color.Transparent, // Dark green
-                    unfocusedIndicatorColor = Color.Transparent, // No underline when not focused
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Red
-                ),
-                shape = RoundedCornerShape(10.dp)
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedOption = option
-                            onSelect(option)
-                            expanded = false
-                        }
-                    ) {
-                        Text(text = option)
-                    }
-                }
-            }
-        }
-    }
-}
-@Composable
-fun TextFieldQuestion(question: String, hint: String, value: String, onValueChange: (String) -> Unit) {
-    Column {
-        Text(
-            text = question,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            label = { Text(text = hint, color = Color(0xFF4CAF50)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White, shape = RoundedCornerShape(10.dp))
-                .border(1.dp, Color.Gray, RoundedCornerShape(10.dp)),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Red
-            ),
-            shape = RoundedCornerShape(10.dp)
-        )
-    }
-}
-@Composable
-fun DemandResultDialog(result: String, onDismiss: () -> Unit, onSave: () -> Unit) {
-    val coroutineScope = rememberCoroutineScope()
-    val repository = FirestoreRepository()
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Prediction Result", fontFamily = workSansBoldFontFamily(), fontSize = 25.sp, color = Color(0xFF024A1A)) },
-        text = {
-            Column {
-                Text(
-                    text = "The forecast predicts that the coconut demand will reach approximately $result kg for the selected month and region, based on the provided parameters.",
-                    fontFamily = workSansBoldFontFamily(),
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Demand Forecasting Prediction: $result kg",
-                    fontFamily = workSansBoldFontFamily(),
-                    fontSize = 20.sp,
-                    color = Color(0xFF024A1A)
-                )
-            }
-        },
-        confirmButton = {
-            Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B)),
-                onClick = {
-                onSave()
-                onDismiss()
-            }) {
-                Text("Save")
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFBDA83B))) {
-                Text("Close")
-            }
-        }
-    )
-}
 @Serializable
 data class DemandPredictionRequest(
     @SerialName("Month")
