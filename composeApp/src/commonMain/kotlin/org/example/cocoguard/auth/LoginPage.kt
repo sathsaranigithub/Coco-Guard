@@ -26,9 +26,15 @@ import androidx.compose.ui.unit.sp
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.logo
 import coco_guard.composeapp.generated.resources.register
+import coco_guard.composeapp.generated.resources.second
 import kotlinx.coroutines.launch
 import org.example.cocoguard.AuthService
 import org.example.cocoguard.FirestoreRepository
+import org.example.cocoguard.screens.component.AppFooter
+import org.example.cocoguard.screens.component.HeaderText
+import org.example.cocoguard.screens.component.InputField
+import org.example.cocoguard.screens.component.LoadingAndErrorState
+import org.example.cocoguard.screens.component.SideImage
 import org.example.cocoguard.ui.theme.lemonadaFontFamily
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
@@ -47,169 +53,73 @@ fun LoginPage(
     val coroutineScope = rememberCoroutineScope()
     val repository = FirestoreRepository()
     val authService = AuthService(repository)
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        Image(
-            painter = painterResource(Res.drawable.register),
-            contentDescription = "Coconut background",
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.3f),
-            contentScale = ContentScale.Crop
-        )
+
+    Row(modifier = Modifier.fillMaxSize().background(Color.White)) {
+        SideImage(painter = painterResource(Res.drawable.register), contentDescription = "Coconut background")
         Column(
+            modifier = Modifier.fillMaxSize().padding(24.dp),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Welcome back",
-                style = TextStyle(
-                    fontFamily = workSansBoldFontFamily(),
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                ),
-                modifier = Modifier
-                    .padding(bottom = 40.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = "Welcome to CocoGuard Empowering Coconut Farmers with AI Solutions",
-                style = TextStyle(
-                    fontFamily = workSansSemiBoldFontFamily(),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black,
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier.padding(bottom = 20.dp)
+            HeaderText(
+                title = "Welcome back",
+                subtitle = "Welcome to CocoGuard Empowering Coconut Farmers with AI Solutions"
             )
             Card(
                 shape = RoundedCornerShape(10.dp),
                 elevation = 4.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    TextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("E-mail") },
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.Transparent,
-                            textColor = Color.Black
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                Column(modifier = Modifier.padding(16.dp)) {
+                    InputField(value = email, label = "E-mail", onValueChange = { email = it })
                     Spacer(modifier = Modifier.height(10.dp))
-                    var passwordVisible by remember { mutableStateOf(false) }
-                    TextField(
+                    InputField(
                         value = password,
+                        label = "Password",
                         onValueChange = { password = it },
-                        label = { Text("Password") },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.Transparent,
-                            textColor = Color.Black
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                        isPassword = true
                     )
                     Spacer(modifier = Modifier.height(20.dp))
-                    if (loading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            color = Color(0xFF4CAF50)
-                        )
-                    } else {
-                        Button(
-                            onClick = {
-                                loading = true
-                                errorMessage = null
+                    Button(
+                        onClick = {
+                            loading = true
+                            errorMessage = null
 
-                                if (email.isNotBlank() && password.isNotBlank()) {
-                                    coroutineScope.launch {
-                                        try {
-                                            val isAuthenticated = authService.signIn(email, password)
-                                            if (isAuthenticated) {
-                                                onEmailLoggedIn(email)
-                                                onNavigateToHome()
-                                            } else {
-                                                errorMessage = "Invalid Email or Password"
-                                            }
-                                        } catch (e: Exception) {
-                                            errorMessage = "Error: ${e.message}"
-                                        } finally {
-                                            loading = false
+                            if (email.isNotBlank() && password.isNotBlank()) {
+                                coroutineScope.launch {
+                                    try {
+                                        val isAuthenticated = authService.signIn(email, password)
+                                        if (isAuthenticated) {
+                                            onEmailLoggedIn(email)
+                                            onNavigateToHome()
+                                        } else {
+                                            errorMessage = "Invalid Email or Password"
                                         }
+                                    } catch (e: Exception) {
+                                        errorMessage = "Error: ${e.message}"
+                                    } finally {
+                                        loading = false
                                     }
-                                } else {
-                                    errorMessage = "Please fill in both fields."
-                                    loading = false
                                 }
-                            },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .padding(vertical = 10.dp)
-                        ) {
-                            Text(
-                                text = "Login",
-                                color = Color.White,
-                                style = TextStyle(fontSize = 18.sp)
-                            )
-                        }
+                            } else {
+                                errorMessage = "Please fill in both fields."
+                                loading = false
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).padding(vertical = 10.dp)
+                    ) {
+                        Text(text = "Login", color = Color.White, style = TextStyle(fontSize = 18.sp))
                     }
                 }
             }
             Spacer(modifier = Modifier.height(30.dp))
-            errorMessage?.let {
-                Text(
-                    text = it,
-                    color = Color.Red,
-                    style = TextStyle(fontSize = 14.sp),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-            }
-            Image(
-                painter = painterResource(Res.drawable.logo),
-                contentDescription = "App Logo",
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(bottom = 8.dp)
-            )
-            Text(
-                text = "Coco Guard",
-                style = TextStyle(
-                    fontFamily = lemonadaFontFamily(),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4CAF50)
-                )
-            )
-            TextButton(
-                onClick = onNavigateToRegister,
-                modifier = Modifier.padding(bottom = 5.dp)
-            ) {
+            LoadingAndErrorState(isLoading = loading, errorMessage = errorMessage)
+            AppFooter()
+            TextButton(onClick = onNavigateToRegister) {
                 Text(
                     text = "Don't have an account? Register",
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 16.sp,
-                        fontFamily = workSansFontFamily(),
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.padding(top = 30.dp)
+                    style = TextStyle(color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center)
                 )
             }
         }

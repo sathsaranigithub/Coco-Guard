@@ -79,7 +79,7 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
 
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(40.dp)
                         .background(
                             color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
                             shape = CircleShape
