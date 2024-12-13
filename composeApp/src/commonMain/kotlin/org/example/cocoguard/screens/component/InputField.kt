@@ -22,7 +22,11 @@ fun InputField(
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
-            textColor = Color.Black
+            textColor = Color.Black,
+            focusedLabelColor = Color(0xFF4CAF50), // Color when focused
+            unfocusedLabelColor = Color(0xFF4CAF50), // Color when not focused
+            focusedIndicatorColor = Color(0xFF4CAF50), // Underline color when focused
+            unfocusedIndicatorColor = Color.Gray
         ),
         modifier = Modifier.fillMaxWidth()
     )

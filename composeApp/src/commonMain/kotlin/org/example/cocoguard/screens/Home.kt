@@ -61,7 +61,6 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
     val showLogoutDialog = remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
 
-        // Non-scrollable main green card at the top
         Card(
             modifier = Modifier
                 .fillMaxWidth()

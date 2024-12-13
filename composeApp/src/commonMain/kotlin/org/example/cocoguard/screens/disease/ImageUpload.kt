@@ -312,7 +312,19 @@ fun ImageUploadScreen(navController: NavController) {
                                 )
                             }
                             else{
-                                showAlertDialog(onDismiss = { showDialog.value = false })
+//                                showAlertDialog(onDismiss = { showDialog.value = false })
+                                Text(
+                                    text = "Invalid image",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "This image can't be identified by the AI model. Please upload a clear and valid image and try again.",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
                             }
                         }
                     }
@@ -358,26 +370,4 @@ suspend fun uploadImage(imageBytes: ByteArray): String {
     } finally {
         client.close()
     }
-}
-@Composable
-fun showAlertDialog(onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = "Invalid image") },
-        text = {
-            Column {
-                Text(text = "Please upload a valid image.")
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "This image can't be identified by the AI model. Please upload a clear and valid image and try again.")
-            }
-        },
-        confirmButton = {  },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss
-            ) {
-                Text(text = "Close", color = Color.Green)
-            }
-        }
-    )
 }

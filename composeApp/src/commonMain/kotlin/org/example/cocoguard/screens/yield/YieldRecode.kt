@@ -87,7 +87,7 @@ fun YieldRecordScreen(navController: NavController, userEmail: String) {
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator( color = Color(0xFF4CAF50))
             }
         } else if (errorMessage.isNotEmpty()) {
             Box(
