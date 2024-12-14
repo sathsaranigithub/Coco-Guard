@@ -36,7 +36,6 @@ fun OnboardScreen(navController: NavController) {
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-
             // Main Heading Text placed at the top start
             Column(
                 modifier = Modifier
@@ -49,7 +48,6 @@ fun OnboardScreen(navController: NavController) {
                     modifier = Modifier
                         .padding(bottom = 8.dp, start = 15.dp)
                 )
-
                 // Subheading Text
                 Text(
                     text = "Empowering coconut farmers with cutting-edge AI technology",
@@ -58,7 +56,6 @@ fun OnboardScreen(navController: NavController) {
                         .width(330.dp)
                         .padding(top = 20.dp, start = 15.dp)
                 )
-
                 // "Get Started" Button
                 Button(
                     onClick = {

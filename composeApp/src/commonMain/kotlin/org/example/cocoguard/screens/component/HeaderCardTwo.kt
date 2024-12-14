@@ -2,8 +2,6 @@ package org.example.cocoguard.screens.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +19,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,9 +33,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.navigation.NavController
 
 @Composable
 fun HeaderCardTwo(
@@ -51,8 +46,6 @@ fun HeaderCardTwo(
     painter: Painter,
     isPressed: Boolean
 ) {
-
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,7 +94,6 @@ fun HeaderCardTwo(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 10.dp)
             )
-
             // Description and Button
             Row(
                 modifier = Modifier

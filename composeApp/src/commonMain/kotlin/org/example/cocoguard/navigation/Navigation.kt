@@ -1,6 +1,5 @@
 package org.example.cocoguard.navigation
 
-
 import RegisterPage
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,8 +27,6 @@ fun AppNavigation(navController: NavHostController) {
     var loggedInEmail by remember { mutableStateOf<String?>(null) }
     NavHost(navController = navController, startDestination = "onboard") {
         composable("onboard") { OnboardScreen(navController) }
-
-
         composable("login") {
             LoginPage(
                 onNavigateToRegister = { navController.navigate("register") },
@@ -53,7 +50,6 @@ fun AppNavigation(navController: NavHostController) {
             ) {backStackEntry ->
             val email = backStackEntry.arguments?.getString("loggedInEmail") ?: ""
             ImageUploadScreen(navController = navController, email = email) }
-
         composable(
             "forecastingQuestion/{loggedInEmail}",
             arguments = listOf(navArgument("loggedInEmail") { type = NavType.StringType })

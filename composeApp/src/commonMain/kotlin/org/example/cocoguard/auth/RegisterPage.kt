@@ -1,24 +1,18 @@
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,16 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coco_guard.composeapp.generated.resources.Res
-import coco_guard.composeapp.generated.resources.logo
 import coco_guard.composeapp.generated.resources.register
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,18 +39,11 @@ import org.example.cocoguard.screens.component.HeaderText
 import org.example.cocoguard.screens.component.InputField
 import org.example.cocoguard.screens.component.LoadingAndErrorState
 import org.example.cocoguard.screens.component.SideImage
-import org.example.cocoguard.ui.theme.lemonadaFontFamily
-import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.example.cocoguard.ui.theme.workSansFontFamily
-import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 import java.security.MessageDigest
 @Composable
-fun RegisterPage(
-    onNavigateToHome: () -> Unit,
-    onNavigateToLogin: () -> Unit,
-    onEmailLoggedIn: (String) -> Unit
-) {
+fun RegisterPage(onNavigateToHome: () -> Unit, onNavigateToLogin: () -> Unit, onEmailLoggedIn: (String) -> Unit) {
     var uname by remember { mutableStateOf(("")) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf(("")) }
@@ -69,33 +51,20 @@ fun RegisterPage(
     var errorMessage by remember { mutableStateOf<String?>(null) } // Error state
     val coroutineScope = rememberCoroutineScope()
     val repository = FirestoreRepository()
-
     Row(modifier = Modifier.fillMaxSize().background(Color.White)){
         SideImage(painter = painterResource(Res.drawable.register), contentDescription = "Coconut background")
-        Column(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(modifier = Modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally) {
             HeaderText(
                 title = "Let's Create your account",
                 subtitle = "Join CocoGuard and protect your farm and increase yield and market with AI"
             )
-            Card(
-                shape = RoundedCornerShape(10.dp),
-                elevation = 4.dp,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Card(shape = RoundedCornerShape(10.dp), elevation = 4.dp, modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     InputField(value = uname, onValueChange = { uname = it }, label = "User name")
                     Spacer(modifier = Modifier.height(10.dp))
                     InputField(value = email, onValueChange = { email = it }, label = "E-mail")
                     Spacer(modifier = Modifier.height(10.dp))
-                    InputField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = "Password"
-                    )
+                    InputField(value = password, onValueChange = { password = it }, label = "Password")
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = {
@@ -135,14 +104,9 @@ fun RegisterPage(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
-                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
-                            .padding(vertical = 10.dp)
+                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).padding(vertical = 10.dp)
                     ) {
-                        Text(
-                            text = "Register",
-                            color = Color.White,
-                            style = TextStyle(fontSize = 18.sp)
-                        )
+                        Text(text = "Register", color = Color.White, style = TextStyle(fontSize = 18.sp))
                     }
                 }
             }
@@ -150,15 +114,11 @@ fun RegisterPage(
             LoadingAndErrorState(isLoading = loading, errorMessage = errorMessage)
             AppFooter()
             TextButton(onClick = onNavigateToLogin) {
-                Text(text = "Already have an account? Login",
-                    style = TextStyle(color = Color.Black, fontSize = 16.sp, fontFamily = workSansFontFamily(), textAlign = TextAlign.Center),
-                )
+                Text(text = "Already have an account? Login", style = TextStyle(color = Color.Black, fontSize = 16.sp, fontFamily = workSansFontFamily(), textAlign = TextAlign.Center),)
             }
         }
-
-        }
+      }
     }
-
 fun encryptPassword(password: String): String {
     val messageDigest = MessageDigest.getInstance("SHA-256")
     val hashedBytes = messageDigest.digest(password.toByteArray())

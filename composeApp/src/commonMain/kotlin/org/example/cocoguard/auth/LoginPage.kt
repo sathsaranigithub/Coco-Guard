@@ -1,6 +1,5 @@
 package org.example.cocoguard.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,18 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coco_guard.composeapp.generated.resources.Res
-import coco_guard.composeapp.generated.resources.logo
 import coco_guard.composeapp.generated.resources.register
-import coco_guard.composeapp.generated.resources.second
 import kotlinx.coroutines.launch
 import org.example.cocoguard.AuthService
 import org.example.cocoguard.FirestoreRepository
@@ -35,17 +28,9 @@ import org.example.cocoguard.screens.component.HeaderText
 import org.example.cocoguard.screens.component.InputField
 import org.example.cocoguard.screens.component.LoadingAndErrorState
 import org.example.cocoguard.screens.component.SideImage
-import org.example.cocoguard.ui.theme.lemonadaFontFamily
-import org.example.cocoguard.ui.theme.workSansBoldFontFamily
-import org.example.cocoguard.ui.theme.workSansFontFamily
-import org.example.cocoguard.ui.theme.workSansSemiBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 @Composable
-fun LoginPage(
-    onNavigateToRegister: () -> Unit,
-    onNavigateToHome: () -> Unit,
-    onEmailLoggedIn: (String) -> Unit
-) {
+fun LoginPage(onNavigateToRegister: () -> Unit, onNavigateToHome: () -> Unit, onEmailLoggedIn: (String) -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) }
@@ -53,38 +38,27 @@ fun LoginPage(
     val coroutineScope = rememberCoroutineScope()
     val repository = FirestoreRepository()
     val authService = AuthService(repository)
-
     Row(modifier = Modifier.fillMaxSize().background(Color.White)) {
         SideImage(painter = painterResource(Res.drawable.register), contentDescription = "Coconut background")
         Column(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.Top, horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HeaderText(
                 title = "Welcome back",
                 subtitle = "Welcome to CocoGuard Empowering Coconut Farmers with AI Solutions"
             )
             Card(
-                shape = RoundedCornerShape(10.dp),
-                elevation = 4.dp,
-                modifier = Modifier.fillMaxWidth()
+                shape = RoundedCornerShape(10.dp), elevation = 4.dp, modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     InputField(value = email, label = "E-mail", onValueChange = { email = it })
                     Spacer(modifier = Modifier.height(10.dp))
-                    InputField(
-                        value = password,
-                        label = "Password",
-                        onValueChange = { password = it },
-                        isPassword = true
-                    )
+                    InputField(value = password, label = "Password", onValueChange = { password = it }, isPassword = true)
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = {
                             loading = true
                             errorMessage = null
-
                             if (email.isNotBlank() && password.isNotBlank()) {
                                 coroutineScope.launch {
                                     try {

@@ -1,4 +1,3 @@
-// Home.kt
 package org.example.cocoguard.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -44,7 +43,6 @@ import coco_guard.composeapp.generated.resources.cardone
 import coco_guard.composeapp.generated.resources.cardthree
 import coco_guard.composeapp.generated.resources.cardtwo
 import coco_guard.composeapp.generated.resources.homemain
-import coco_guard.composeapp.generated.resources.logout
 import coco_guard.composeapp.generated.resources.slider1
 import coco_guard.composeapp.generated.resources.slider2
 import coco_guard.composeapp.generated.resources.slider3
@@ -59,8 +57,8 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val showLogoutDialog = remember { mutableStateOf(false) }
-    Column(modifier = Modifier.fillMaxSize()) {
 
+    Column(modifier = Modifier.fillMaxSize()) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,12 +68,8 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
             backgroundColor = Color(0xFF024A1A),
             elevation = 8.dp
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
+            Column(modifier = Modifier.fillMaxSize().padding(16.dp)
             ) {
-
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -92,11 +86,7 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                             .size(52.dp),
                         interactionSource = interactionSource
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "logout",
-                            tint = Color.White // Icon remains white
-                        )
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "logout", tint = Color.White)
                     }
                 }
                 // Title
@@ -114,7 +104,6 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -129,7 +118,6 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                         modifier = Modifier
                             .weight(1f)
                     )
-
                     Card(
                       modifier = Modifier
                             .fillMaxWidth(1 / 3f)
@@ -144,22 +132,14 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                 }
             }
         }
-
         // List of images, titles, and descriptions
         val cardData = listOf(
             Pair(Triple(Res.drawable.cardone, "Disease Detection", "Image processing for real-time coconut tree diseases identification and recommended treatment for disease"), "imageUpload/$loggedInEmail"),
             Pair(Triple(Res.drawable.cardtwo, "Demand Forecasting", "Detect coconut diseases early with AI-driven tools."), "forecastingQuestion/$loggedInEmail"),
             Pair(Triple(Res.drawable.cardthree, "Yield Prediction", "Predict coconut yield accurately to enhance productivity."), "yieldQuestion/$loggedInEmail")
         )
-
-
         // Scrollable content with image cards
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(top = 16.dp) // Optional padding between green card and scrollable content
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f).padding(top = 16.dp)) {
             items(cardData.size) { index ->
                 val (cardInfo, route) = cardData[index]
                 val (imageRes, title, description) = cardInfo
@@ -224,7 +204,6 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
                     .height(180.dp)
                     .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
             )
-
             // Text and Button content taking the other half
             Column(
                 modifier = Modifier
@@ -232,18 +211,8 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Text(
-                    text = description,
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+                Text(text = title, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(text = description, fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = onClick,
@@ -256,7 +225,6 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
         }
     }
 }
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageSlider() {
@@ -266,10 +234,8 @@ fun ImageSlider() {
         Res.drawable.slider2,
         Res.drawable.slider3
     )
-
     val pageState = rememberPagerState(pageCount = { imagesList.size })
     val coroutineScope = rememberCoroutineScope()
-
     // Auto-scroll
     LaunchedEffect(Unit) {
         while (true) {
@@ -280,7 +246,6 @@ fun ImageSlider() {
             }
         }
     }
-
     Box( modifier = Modifier
         .fillMaxWidth(1 / 3f)
         .aspectRatio(154f / 114f)
@@ -292,7 +257,6 @@ fun ImageSlider() {
                 modifier = Modifier.fillMaxSize()
             )
         }
-
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

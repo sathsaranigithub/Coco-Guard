@@ -4,29 +4,20 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.homemain
-import kotlinx.coroutines.launch
 import org.example.cocoguard.Demand
 import org.example.cocoguard.FirestoreRepository
 import org.example.cocoguard.screens.component.HeaderCardOne
-import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -37,7 +28,6 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
     var errorMessage by remember { mutableStateOf("") }
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-
 
     // Fetch demands
     LaunchedEffect(userEmail) {
@@ -55,8 +45,6 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
             loading = false
         }
     }
-
-
     Column(modifier = Modifier.fillMaxSize()) {
         HeaderCardOne(
             title = "Coconut Demand Forecast\n",
@@ -69,7 +57,6 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
             }
         )
         Spacer(modifier = Modifier.height(10.dp))
-
         // Display Loading or Error
         if (loading) {
             Box(
@@ -122,9 +109,7 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
                         )
                     }
                 }
-
                 Divider(color = Color.Gray, thickness = 1.dp)
-
                 // Table Rows
                 demandRecords.forEachIndexed { index, record ->
                     val backgroundColor = if (index % 2 == 0) Color.White else Color(0xFFD8F3DC)

@@ -36,7 +36,6 @@ import org.example.cocoguard.screens.component.DropdownQuestion
 import org.example.cocoguard.screens.component.HeaderCardTwo
 import org.example.cocoguard.screens.component.ResultDialog
 import org.example.cocoguard.screens.component.TextFieldQuestion
-import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Serializable
@@ -47,7 +46,6 @@ data class YieldPredictionResponse(
 fun YieldQuestionScreen(navController: NavController, email: String) {
     var showDialog by remember { mutableStateOf(false) }
     var predictionResult by remember { mutableStateOf("") }
-    // State holders for each input field
     var soilType by remember { mutableStateOf("Loamy") }
     var soilPH by remember { mutableStateOf("") }
     var humidity by remember { mutableStateOf("") }
@@ -162,7 +160,6 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
             painter = painterResource(Res.drawable.homemain),
             isPressed = isPressed
         )
-
         Spacer(modifier = Modifier.height(16.dp))
         // Questions Section
         LazyColumn(
@@ -229,10 +226,8 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
             }
             item {
                 // Submit Button
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically)
+                {
                     // Validation message on the start of the row
                     if (showValidationError) {
                         Text(
@@ -251,12 +246,7 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                         modifier = Modifier.width(160.dp)
                     ) {
-                        Text(
-                            text = "Submit",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text(text = "Submit", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -270,11 +260,11 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
             onDismiss = { showDialog = false },
             onSave = {
                 val email = "$email"
-                // Create an instance of the Demand class
+                // Create an instance of the yield class
                 val yield = Yield(soilType,soilPH,humidity,temperature,sunlightHours,month,plantAge,predictionResult)
-                // Log the demand data for debugging
+                // Log the yield data for debugging
                 println("Saving yield data: $yield")
-                // Save the demand data using Firestore or other persistence methods
+                // Save the yield data using Firestore or other persistence methods
                 coroutineScope.launch {
                     repository.addYield(email,yield)
                 }
@@ -282,16 +272,9 @@ fun YieldQuestionScreen(navController: NavController, email: String) {
         )
     }
     if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0x88000000)), // Semi-transparent overlay
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                color = Color.Green,
-                strokeWidth = 4.dp
-            )
+        Box(modifier = Modifier.fillMaxSize().background(Color(0x88000000)), contentAlignment = Alignment.Center)
+        {
+            CircularProgressIndicator(color = Color.Green, strokeWidth = 4.dp)
         }
     }
 }

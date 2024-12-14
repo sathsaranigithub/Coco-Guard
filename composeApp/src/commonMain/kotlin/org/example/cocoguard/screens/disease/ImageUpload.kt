@@ -1,18 +1,13 @@
 package org.example.cocoguard.screens.disease
 
-
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -36,13 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import coil3.compose.AsyncImage
 import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.io.readByteArray
@@ -64,44 +54,22 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.TextButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.navigation.NavController
 import coco_guard.composeapp.generated.resources.Res
-import coco_guard.composeapp.generated.resources.first
 import coco_guard.composeapp.generated.resources.gallery
-import coco_guard.composeapp.generated.resources.homemain
 import coco_guard.composeapp.generated.resources.second
 import coco_guard.composeapp.generated.resources.uploadimage
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.utils.EmptyContent.headers
 import io.ktor.http.ContentType
-import io.ktor.http.cio.Request
-import io.ktor.serialization.kotlinx.json.json
-import jdk.jfr.internal.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import org.example.cocoguard.Demand
 import org.example.cocoguard.FirestoreRepository
 import org.example.cocoguard.Treatment
 import org.example.cocoguard.screens.component.DropdownQuestion
-import org.example.cocoguard.screens.component.HeaderCardOne
 import org.example.cocoguard.screens.component.HeaderCardTwo
 
 @Serializable
@@ -125,17 +93,10 @@ fun ImageUploadScreen(navController: NavController, email: String) {
     var responseText = remember { mutableStateOf<String?>(null) }
     var isLoading = remember { mutableStateOf(false) }
     var detectedDisease = remember { mutableStateOf("") }
-    var showDialog = remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     var selectedDuration = remember { mutableStateOf("") }
-    var showDropdown = remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
     val repository = FirestoreRepository()
-
-    val treatmentOptions = listOf("Regular", "3 months", "One year") // Add treatment duration options
-
-
     // Use a lambda to configure the file picker launcher
     val pickerLauncher = rememberFilePickerLauncher(
         onResult = { files ->
@@ -145,7 +106,6 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                     platformSpecificFilePath.value = it.getPath(context)?:""
                 }
             }
-
         },
         type = FilePickerFileType.Image,
         selectionMode = FilePickerSelectionMode.Single
@@ -163,73 +123,32 @@ fun ImageUploadScreen(navController: NavController, email: String) {
             isPressed = isPressed
         )
         // Row layout with image card and upload button
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             // Image card
-            Card(
-                modifier = Modifier
-                    .size(180.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                backgroundColor = Color.Gray,
-                elevation = 4.dp
-            ) {
+            Card(modifier = Modifier.size(180.dp).clip(RoundedCornerShape(16.dp)), backgroundColor = Color.Gray, elevation = 4.dp) {
                 // Check if byteArray has any data, if not show the static image
                 if (byteArray.value.isNotEmpty()) {
                     // If the byteArray has data, display it as an image
-                    AsyncImage(
-                        model = byteArray.value,
-                        modifier = Modifier.size(170.dp),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null
-                    )
+                    AsyncImage(model = byteArray.value, modifier = Modifier.size(170.dp), contentScale = ContentScale.Crop, contentDescription = null)
                 } else {
-                    // If no image has been uploaded, show the static image
-                    Image(
-                        painter = painterResource(Res.drawable.uploadimage), // Replace with your actual resource
-                        contentDescription = "Upload Image Placeholder",
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    Image(painter = painterResource(Res.drawable.uploadimage), contentDescription = "Upload Image Placeholder", modifier = Modifier.fillMaxSize())
                 }
             }
-
             // Text area with upload button
-            Column(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .align(Alignment.CenterVertically),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Upload Image",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Text(
-                    text = "You can select an existing photo to upload.",
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+            Column(modifier = Modifier.padding(start = 16.dp).align(Alignment.CenterVertically), verticalArrangement = Arrangement.Center) {
+                Text(text = "Upload Image", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(text = "You can select an existing photo to upload.", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier.padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.gallery),
-                        contentDescription = "Gallery",
-                        modifier = Modifier.size(40.dp).clickable {
+                    Image(painter = painterResource(Res.drawable.gallery), contentDescription = "Gallery", modifier = Modifier.size(40.dp).clickable {
                             pickerLauncher.launch()
                         }
                     )
                 }
-
                 Button(
                     onClick = {
                         // Start the upload and POST request
@@ -257,12 +176,7 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                 }
             }
         }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .weight(1f)
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxWidth().padding(16.dp).weight(1f)) {
             item {
                 Card(
                     modifier = Modifier
@@ -273,21 +187,10 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         if (detectedDisease.value.isNotEmpty()) {
-
                             if(detectedDisease.value != "Unknown disease" && detectedDisease.value != "Unknown Class"){
-                                Text(
-                                    text = "Detected disease: ${detectedDisease.value}",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black
-                                )
+                                Text(text = "Detected disease: ${detectedDisease.value}", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "Description",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black
-                                )
+                                Text(text = "Description", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                                 Text(
                                     text = when (detectedDisease.value) {
                                         "bud root dropping" -> "Bud rot dropping is a devastating disease that affects coconut palms, caused by fungal pathogens like Phytophthora palmivora or bacterial infections. It begins with the rotting of the growing tip or bud, leading to the palm's eventual death if untreated. The disease often occurs in humid, wet climates or areas with poor drainage. It can spread through contaminated soil, water, or plant debris, making early identification and management crucial to prevent widespread damage."
@@ -301,12 +204,7 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                                     color = Color.Gray
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "Symptoms",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black
-                                )
+                                Text(text = "Symptoms", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                                 Text(
                                     text =  when (detectedDisease.value) {
                                         "bud root dropping" -> "Discoloration and rotting of the central bud.\n" + "Yellowing of young leaves.\n" + "Drooping or falling fronds.\n" + "Foul odor from the infected bud area.\n" + "Formation of black or brown lesions on the bud."
@@ -319,14 +217,8 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                                     color = Color.Gray
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
+                                Text(text = "Treatment", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                                 Text(
-                                    text = "Treatment",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black
-                                )
-                                Text(
-
                                     text = when (detectedDisease.value) {
                                         "bud root dropping" -> "1. Remove and destroy infected plant material.\n" + "2. Improve drainage around the palm.\n" + "3. Apply copper-based fungicides to the bud.\n" + "4. Spray Bordeaux mixture (1%) on affected and surrounding trees.\n" + "5. Use Trichoderma-based biofungicides for soil treatment.\n" + "6. Ensure proper spacing for airflow to reduce humidity.\n" + "7. Avoid water stagnation near the tree.\n" + "8. Use resistant coconut varieties, if available.\n" + "9. Maintain regular fertilization with balanced nutrients.\n" + "10. Conduct regular tree health inspections to detect symptoms early."
                                         "bud rot" -> "1. Remove and burn infected plant parts.\n" + "2. Apply Bordeaux mixture (1%) or copper oxychloride to the affected bud.\n" + "3. Use Trichoderma-based biofungicides in the soil around the palm.\n" + "4. Improve drainage to prevent water stagnation.\n" + "5. Spray systemic fungicides like Metalaxyl.\n" + "6. Ensure adequate spacing for ventilation.\n" + "7. Avoid injury to the palm's trunk and bud.\n" + "8. Apply balanced fertilizers to strengthen plant health.\n" + "9. Treat the soil with lime to reduce pathogen proliferation.\n" + "10 Use resistant or tolerant coconut varieties."
@@ -338,12 +230,7 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                                     color = Color.Gray
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
-                                Text(
-                                    text = "Create treatment plan for  ${detectedDisease.value}",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black
-                                )
+                                Text(text = "Create treatment plan for  ${detectedDisease.value}", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                                 Spacer(modifier = Modifier.height(8.dp))
                                 DropdownQuestion(
                                     question = "Select your preferred durations for treatment",
@@ -360,19 +247,13 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                                                 val result = callGeminiAPI(queryText,email,repository,navController)
                                                 responseText.value = result
                                                 isLoading.value = false
-//
                                             }
                                         }
                                     },
                                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                                     modifier = Modifier.width(160.dp)
                                 ) {
-                                    Text(
-                                        text = "Create plan",
-                                        color = Color.White,
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                    Text(text = "Create plan", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                                 }
                                 if (isLoading.value) {
                                     CircularProgressIndicator(
@@ -382,12 +263,7 @@ fun ImageUploadScreen(navController: NavController, email: String) {
                                 }
                             }
                             else{
-                                Text(
-                                    text = "Invalid image",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black
-                                )
+                                Text(text = "Invalid image", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                                 Text(
                                     text = "This image can't be identified by the AI model. Please upload a clear and valid image and try again.",
                                     fontSize = 16.sp,
@@ -414,7 +290,6 @@ suspend fun uploadImage(imageBytes: ByteArray): String {
             }
         }
     }
-
     return try {
         val response: HttpResponse = client.submitFormWithBinaryData(
             url = "https://asia-south1-plucky-pointer-443915-u7.cloudfunctions.net/coconut-diseases",
@@ -425,10 +300,7 @@ suspend fun uploadImage(imageBytes: ByteArray): String {
                 })
             }
         )
-
-
         val responseBody = response.bodyAsText()
-
         if (response.status == HttpStatusCode.OK) {
             responseBody
         } else {
@@ -440,37 +312,22 @@ suspend fun uploadImage(imageBytes: ByteArray): String {
         client.close()
     }
 }
-
 // API call to Gemini API
 @Serializable
-data class GeminiResponse(
-    val candidates: List<Candidate>
-)
-
+data class GeminiResponse(val candidates: List<Candidate>)
 @Serializable
-data class Candidate(
-    val content: Content
-)
-
+data class Candidate(val content: Content)
 @Serializable
-data class Content(
-    val parts: List<Part>
-)
-
+data class Content(val parts: List<Part>)
 @Serializable
-data class Part(
-    val text: String
-)
-
+data class Part(val text: String)
 suspend fun callGeminiAPI(queryText: String, email: String, repository: FirestoreRepository,navController: NavController): String {
     return withContext(Dispatchers.IO) {
         val client = HttpClient(CIO) {
-            // Optional configuration if needed
+            // Optional configuration
         }
-
         try {
             val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCwzZzbkmlgookWjngwVh8BHQSVP8HPEyk"
-
             val requestBody = """
                 {
                     "contents": [
@@ -484,29 +341,21 @@ suspend fun callGeminiAPI(queryText: String, email: String, repository: Firestor
                     ]
                 }
             """
-
             val response: HttpResponse = client.post(url) {
-                headers {
-                    append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                }
+                headers { append(HttpHeaders.ContentType, ContentType.Application.Json.toString()) }
                 setBody(requestBody)
             }
-
             val responseText = response.bodyAsText()
             println("GeminiAPIResponse: $responseText") // Debug log
-
             // Parse the JSON response
             val json = Json { ignoreUnknownKeys = true }
             val geminiResponse = json.decodeFromString<GeminiResponse>(responseText)
-
             // Extract the text content
             val textContent = geminiResponse.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
             textContent?.also { println("Extracted Text: $it") }
-
             // If text is extracted, save it to Firebase
             if (textContent != null) {
                 val treatment = Treatment(text = textContent)
-
                 repository.addTreatment(email, treatment) // Save using the repository
                 println("Saved treatment to Firestore for email: $email")
                 // Navigate to diseaseTreatmentScreen
@@ -514,7 +363,6 @@ suspend fun callGeminiAPI(queryText: String, email: String, repository: Firestor
                     navController.navigate("diseaseTreatmentScreen/$email")
                 }
                 return@withContext "Text saved to Firebase: $textContent"
-
             } else {
                 println("No text found in API response")
                 return@withContext "No text found in API response"
