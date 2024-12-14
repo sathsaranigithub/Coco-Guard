@@ -21,11 +21,15 @@ import org.example.cocoguard.screens.yield.YieldQuestionScreen
 import org.example.cocoguard.screens.yield.YieldRecordScreen
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import org.example.cocoguard.screens.disease.DiseaseTreatmentScreen
+
 @Composable
 fun AppNavigation(navController: NavHostController) {
     var loggedInEmail by remember { mutableStateOf<String?>(null) }
     NavHost(navController = navController, startDestination = "onboard") {
         composable("onboard") { OnboardScreen(navController) }
+
+
         composable("login") {
             LoginPage(
                 onNavigateToRegister = { navController.navigate("register") },
@@ -44,7 +48,12 @@ fun AppNavigation(navController: NavHostController) {
             )
         }
         composable("home") { HomeScreen(navController, loggedInEmail.toString()) }
-        composable("imageUpload") {ImageUploadScreen(navController) }
+        composable("imageUpload/{loggedInEmail}",
+            arguments = listOf(navArgument("loggedInEmail") { type = NavType.StringType })
+            ) {backStackEntry ->
+            val email = backStackEntry.arguments?.getString("loggedInEmail") ?: ""
+            ImageUploadScreen(navController = navController, email = email) }
+
         composable(
             "forecastingQuestion/{loggedInEmail}",
             arguments = listOf(navArgument("loggedInEmail") { type = NavType.StringType })
@@ -70,6 +79,12 @@ fun AppNavigation(navController: NavHostController) {
         ) { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email") ?: ""
             ForecastingRecordScreen(navController,userEmail = email)
+        }
+        composable(route ="diseaseTreatmentScreen/{email}",
+            arguments = listOf(navArgument("email") { type = NavType.StringType })
+            ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            DiseaseTreatmentScreen(navController,userEmail = email)
         }
     }
 }

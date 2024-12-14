@@ -147,7 +147,7 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
 
         // List of images, titles, and descriptions
         val cardData = listOf(
-            Pair(Triple(Res.drawable.cardone, "Disease Detection", "Image processing for real-time coconut tree diseases identification and recommended treatment for disease"), "imageUpload"),
+            Pair(Triple(Res.drawable.cardone, "Disease Detection", "Image processing for real-time coconut tree diseases identification and recommended treatment for disease"), "imageUpload/$loggedInEmail"),
             Pair(Triple(Res.drawable.cardtwo, "Demand Forecasting", "Detect coconut diseases early with AI-driven tools."), "forecastingQuestion/$loggedInEmail"),
             Pair(Triple(Res.drawable.cardthree, "Yield Prediction", "Predict coconut yield accurately to enhance productivity."), "yieldQuestion/$loggedInEmail")
         )

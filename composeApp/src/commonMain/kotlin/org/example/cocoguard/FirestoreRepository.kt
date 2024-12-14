@@ -71,6 +71,23 @@ class FirestoreRepository {
             Result.failure(e)
         }
     }
+    suspend fun addTreatment(userEmail: String, treatment: Treatment): Result<String> {
+        return try {
+            // Reference the document in the treatment_recode collection
+            val documentRef = db.collection("treatment_recode")
+                .document(userEmail) // Use the user's email as the document ID
+
+            // Save the treatment details as a single field in the document
+            documentRef.set(treatment).await()
+
+            Result.success(documentRef.id) // Return the ID (email) of the document
+        } catch (e: Exception) {
+            println("FirestoreError: ${e.localizedMessage}")
+            Result.failure(e)
+        }
+    }
+
+
     // Retrieve Demands for a User
     suspend fun getDemands(userEmail: String): Result<List<Demand>> {
         return try {
@@ -108,6 +125,23 @@ class FirestoreRepository {
             Result.failure(e)
         }
     }
+    suspend fun getTreatment(userEmail: String): Result<String> {
+        return try {
+            val documentRef = db.collection("treatment_recode").document(userEmail)
+            val snapshot = documentRef.get().await()
+
+            if (snapshot.exists()) {
+                val treatment = snapshot.toObject(Treatment::class.java)
+                Result.success(treatment?.text ?: "No treatment found.")
+            } else {
+                Result.failure(Exception("No document found for email: $userEmail"))
+            }
+        } catch (e: Exception) {
+            println("FirestoreError: ${e.localizedMessage}")
+            Result.failure(e)
+        }
+    }
+
 
     suspend fun getUserByEmail(email: String): User? {
         val snapshot = db.collection("users")
@@ -118,4 +152,6 @@ class FirestoreRepository {
             snapshot.documents.first().toObject(User::class.java)
         } else null
     }
+
+
 }

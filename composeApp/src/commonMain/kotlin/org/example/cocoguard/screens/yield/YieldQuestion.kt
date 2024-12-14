@@ -307,7 +307,7 @@ data class YieldPredictionRequest(
 )
 suspend fun fetchYieldPrediction(client: HttpClient, request: YieldPredictionRequest): YieldPredictionResponse? {
     return try {
-        client.post("https://us-central1-tea-factory-management-system.cloudfunctions.net/yieldprediction") {
+        client.post("https://asia-south1-plucky-pointer-443915-u7.cloudfunctions.net/coconut-yieldprediction") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }.body() // Deserialize directly into YieldPredictionResponse

@@ -67,6 +67,8 @@ import kotlinx.serialization.json.Json
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TextButton
@@ -79,8 +81,28 @@ import coco_guard.composeapp.generated.resources.Res
 import coco_guard.composeapp.generated.resources.first
 import coco_guard.composeapp.generated.resources.gallery
 import coco_guard.composeapp.generated.resources.homemain
+import coco_guard.composeapp.generated.resources.second
 import coco_guard.composeapp.generated.resources.uploadimage
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.utils.EmptyContent.headers
+import io.ktor.http.ContentType
+import io.ktor.http.cio.Request
+import io.ktor.serialization.kotlinx.json.json
+import jdk.jfr.internal.Repository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import org.example.cocoguard.Demand
+import org.example.cocoguard.FirestoreRepository
+import org.example.cocoguard.Treatment
+import org.example.cocoguard.screens.component.DropdownQuestion
 import org.example.cocoguard.screens.component.HeaderCardOne
+import org.example.cocoguard.screens.component.HeaderCardTwo
 
 @Serializable
 data class DetectionResult(val `class`: String) // Use backticks if "class" is a reserved keyword
@@ -95,7 +117,7 @@ fun parseDiseaseFromResponse(response: String): String {
     }
 }
 @Composable
-fun ImageUploadScreen(navController: NavController) {
+fun ImageUploadScreen(navController: NavController, email: String) {
     val scope = rememberCoroutineScope()
     val context = com.mohamedrejeb.calf.core.LocalPlatformContext.current
     var byteArray = remember { mutableStateOf(ByteArray(0)) }
@@ -106,6 +128,12 @@ fun ImageUploadScreen(navController: NavController) {
     var showDialog = remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    var selectedDuration = remember { mutableStateOf("") }
+    var showDropdown = remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val repository = FirestoreRepository()
+
+    val treatmentOptions = listOf("Regular", "3 months", "One year") // Add treatment duration options
 
 
     // Use a lambda to configure the file picker launcher
@@ -124,16 +152,15 @@ fun ImageUploadScreen(navController: NavController) {
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
-
-        HeaderCardOne(
+        HeaderCardTwo(
+            navController = navController,
             title = "Coconut Trees Diseases\n",
             subtitle = "Identification",
-            sentence= "Upload an image to detect coconut tree diseases and receive AI-driven treatment suggestions",
-            navController = navController,
-            painter = painterResource(Res.drawable.first),
-            onBackClick = {
-                navController.navigate("home")
-            }
+            description = "Upload an image to detect coconut tree diseases and receive AI-driven treatment suggestions",
+            buttonText = "Treatment Plan",
+            buttonAction = { navController.navigate("diseaseTreatmentScreen/$email") },
+            painter = painterResource(Res.drawable.second),
+            isPressed = isPressed
         )
         // Row layout with image card and upload button
         Row(
@@ -221,7 +248,7 @@ fun ImageUploadScreen(navController: NavController) {
                         .width(300.dp)
                         .padding(top = 16.dp)
                 ) {
-                    Text(text = "Upload", color = Color.White)
+                    Text(text = "Upload", color = Color.White, fontWeight = FontWeight.Bold)
                 }
                 if (isLoading.value) {
                     CircularProgressIndicator(
@@ -310,9 +337,51 @@ fun ImageUploadScreen(navController: NavController) {
                                     },   fontSize = 14.sp,
                                     color = Color.Gray
                                 )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text(
+                                    text = "Create treatment plan for  ${detectedDisease.value}",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                DropdownQuestion(
+                                    question = "Select your preferred durations for treatment",
+                                    options = listOf("Regular", "3 months", "One year"),
+                                    hint = "Select answer",
+                                    onSelect = { selectedDuration.value = it }
+                                )
+                                Button(
+                                    onClick = {
+                                        if (detectedDisease.value.isNotEmpty() && selectedDuration.value.isNotEmpty()) {
+                                            scope.launch {
+                                                isLoading.value = true
+                                                val queryText = "My coconut tree has ${detectedDisease.value} disease. Give me a ${selectedDuration.value} treatment plan."
+                                                val result = callGeminiAPI(queryText,email,repository,navController)
+                                                responseText.value = result
+                                                isLoading.value = false
+//
+                                            }
+                                        }
+                                    },
+                                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                                    modifier = Modifier.width(160.dp)
+                                ) {
+                                    Text(
+                                        text = "Create plan",
+                                        color = Color.White,
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                                if (isLoading.value) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.padding(2.dp),
+                                        color = Color(0xFF4CAF50)
+                                    )
+                                }
                             }
                             else{
-//                                showAlertDialog(onDismiss = { showDialog.value = false })
                                 Text(
                                     text = "Invalid image",
                                     fontSize = 18.sp,
@@ -369,5 +438,92 @@ suspend fun uploadImage(imageBytes: ByteArray): String {
         "Failed to upload image: ${e.message}"
     } finally {
         client.close()
+    }
+}
+
+// API call to Gemini API
+@Serializable
+data class GeminiResponse(
+    val candidates: List<Candidate>
+)
+
+@Serializable
+data class Candidate(
+    val content: Content
+)
+
+@Serializable
+data class Content(
+    val parts: List<Part>
+)
+
+@Serializable
+data class Part(
+    val text: String
+)
+
+suspend fun callGeminiAPI(queryText: String, email: String, repository: FirestoreRepository,navController: NavController): String {
+    return withContext(Dispatchers.IO) {
+        val client = HttpClient(CIO) {
+            // Optional configuration if needed
+        }
+
+        try {
+            val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCwzZzbkmlgookWjngwVh8BHQSVP8HPEyk"
+
+            val requestBody = """
+                {
+                    "contents": [
+                        {
+                            "parts": [
+                                {
+                                    "text": "$queryText"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            """
+
+            val response: HttpResponse = client.post(url) {
+                headers {
+                    append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                }
+                setBody(requestBody)
+            }
+
+            val responseText = response.bodyAsText()
+            println("GeminiAPIResponse: $responseText") // Debug log
+
+            // Parse the JSON response
+            val json = Json { ignoreUnknownKeys = true }
+            val geminiResponse = json.decodeFromString<GeminiResponse>(responseText)
+
+            // Extract the text content
+            val textContent = geminiResponse.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
+            textContent?.also { println("Extracted Text: $it") }
+
+            // If text is extracted, save it to Firebase
+            if (textContent != null) {
+                val treatment = Treatment(text = textContent)
+
+                repository.addTreatment(email, treatment) // Save using the repository
+                println("Saved treatment to Firestore for email: $email")
+                // Navigate to diseaseTreatmentScreen
+                withContext(Dispatchers.Main) {
+                    navController.navigate("diseaseTreatmentScreen/$email")
+                }
+                return@withContext "Text saved to Firebase: $textContent"
+
+            } else {
+                println("No text found in API response")
+                return@withContext "No text found in API response"
+            }
+        } catch (e: Exception) {
+            println("GeminiAPIError: ${e.localizedMessage}") // Debug error log
+            return@withContext "Error: ${e.localizedMessage}"
+        } finally {
+            client.close() // Ensure the client is closed
+        }
     }
 }
