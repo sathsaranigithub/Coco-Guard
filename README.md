@@ -27,7 +27,8 @@ The app offers a robust coconut demand forecasting feature. By inputting key par
 - **Competitor Countries' Production (kg)**
 
 The app predicts the demand for coconuts in a specific region and month. This feature is powered by a trained machine learning model, enabling users to make informed decisions for export and local market strategies.
-Description:
+
+#### Description:
 The accuracy level of the coconut demand forecasting model is displayed in the screenshot below. This metric helps evaluate the model's ability to predict the coconut demand based on the provided input parameters.
 ![Screenshot 2024-11-29 200323](https://github.com/user-attachments/assets/e17cf472-8f49-42aa-9afc-32d02912d9ca)
 
@@ -42,7 +43,8 @@ Coco Guard also includes a coconut yield prediction feature. By inputting the fo
 - **Plant Age**
 
 The app predicts the coconut yield for the specified conditions. This feature helps farmers optimize their agricultural practices based on accurate data-driven insights.
-Description:
+
+#### Description:
 The screenshot below shows the accuracy level of the trained model for predicting coconut yield. It reflects how effectively the model estimates the yield based on various environmental factors
 ![Screenshot 2024-12-16 001858](https://github.com/user-attachments/assets/5238d658-45a8-49b0-a106-b0258179e0b5)
 
