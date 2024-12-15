@@ -9,6 +9,7 @@ The purpose of the Coco Guard app is to empower farmers with intelligent tools f
 
 ### 1. Upload coconut tree images and identify diseases
 The **Coco Guard** app is designed to help farmers identify diseases affecting coconut trees. Farmers can upload images of their coconut trees, and the app utilizes a trained object detection model (in the computer vision category) to identify diseases. Once a disease is detected, the app provides detailed descriptions of the symptoms and appropriate treatments. Additionally, farmers can create personalized treatment plans using the app's **Gemini AI-powered treatment suggestion feature**, ensuring effective management of diseases.
+![Screenshot 2024-12-16 001738](https://github.com/user-attachments/assets/9c4a74da-2c68-4c96-abe9-469f577c613a)
 
 ### 2. Coconut Demand Forecasting
 The app offers a robust coconut demand forecasting feature. By inputting key parameters such as:
@@ -23,6 +24,7 @@ The app offers a robust coconut demand forecasting feature. By inputting key par
 - **Competitor Countries' Production (kg)**
 
 The app predicts the demand for coconuts in a specific region and month. This feature is powered by a trained machine learning model, enabling users to make informed decisions for export and local market strategies.
+![Screenshot 2024-11-29 200323](https://github.com/user-attachments/assets/e17cf472-8f49-42aa-9afc-32d02912d9ca)
 
 ### 3. Coconut Yield Prediction
 Coco Guard also includes a coconut yield prediction feature. By inputting the following parameters:
@@ -35,6 +37,7 @@ Coco Guard also includes a coconut yield prediction feature. By inputting the fo
 - **Plant Age**
 
 The app predicts the coconut yield for the specified conditions. This feature helps farmers optimize their agricultural practices based on accurate data-driven insights.
+![Screenshot 2024-12-16 001858](https://github.com/user-attachments/assets/5238d658-45a8-49b0-a106-b0258179e0b5)
 
 ### 4. Data Analysis and History Records
 Users can save the parameters and predictions for both yield and demand in dedicated history pages:
