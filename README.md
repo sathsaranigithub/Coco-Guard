@@ -29,7 +29,8 @@ The app offers a robust coconut demand forecasting feature. By inputting key par
 The app predicts the demand for coconuts in a specific region and month. This feature is powered by a trained machine learning model, enabling users to make informed decisions for export and local market strategies.
 
 #### Description:
-The accuracy level of the coconut demand forecasting model is displayed in the screenshot below. This metric helps evaluate the model's ability to predict the coconut demand based on the provided input parameters.
+The accuracy level of the coconut demand forecasting model is displayed in the screenshot below.R² Score: 0.999
+This is an excellent result. An R² score close to 1 indicates that the model is explaining almost all of the variance in the data. A score of 0.999 means that the model's predictions are extremely close to the actual values, suggesting very high accuracy.
 ![Screenshot 2024-11-29 200323](https://github.com/user-attachments/assets/e17cf472-8f49-42aa-9afc-32d02912d9ca)
 
 ### 3. Coconut Yield Prediction
