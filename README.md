@@ -2,7 +2,7 @@
 
 ## Features
 
-### 1. Image Load and Disease Identification
+### 1. Upload coconut tree images and identify diseases
 The **Coco Guard** app is designed to help farmers identify diseases affecting coconut trees. Farmers can upload images of their coconut trees, and the app utilizes a trained object detection model (in the computer vision category) to identify diseases. Once a disease is detected, the app provides detailed descriptions of the symptoms and appropriate treatments. Additionally, farmers can create personalized treatment plans using the app's **Gemini AI-powered treatment suggestion feature**, ensuring effective management of diseases.
 
 ### 2. Coconut Demand Forecasting
