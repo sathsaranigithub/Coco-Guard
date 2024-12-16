@@ -72,7 +72,7 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "Error: $errorMessage", color = Color.Red, fontSize = 16.sp)
+                Text(text = "First you need to add Demand forecasting recode and save then you can see the your available recodes with prediction result: $errorMessage", color = Color.Red, fontSize = 16.sp)
             }
         } else {
             // Display Table of Records
