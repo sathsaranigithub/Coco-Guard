@@ -63,7 +63,7 @@ These records allow farmers to analyze trends and make better decisions for futu
 ## Screenshots
 
 <img src="https://github.com/user-attachments/assets/023f7c16-d8f1-4fea-ae48-6f2ac5d3a3df" width="700" alt="Screenshot 2">
-<img src="https://github.com/user-attachments/assets/0aa48c2f-b640-4765-a2ea-31ef7cfaf49b" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/0aa48c2f-b640-4765-a2ea-31ef7cfaf49b" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="https://github.com/user-attachments/assets/f0632e2b-3738-4b37-b686-73a401b73c4e" width="250" alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/61c4bc7f-5b09-4147-9f20-6b0965f482a2" width="700" alt="Screenshot 2">
 
