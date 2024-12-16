@@ -60,8 +60,10 @@ Users can save the parameters and predictions for both yield and demand in dedic
 These records allow farmers to analyze trends and make better decisions for future farming and trade activities.
 
 ---
-## Screen shots
-![1](https://github.com/user-attachments/assets/3c656e64-d562-4e6b-95fd-b8379ff083b7) ![01](https://github.com/user-attachments/assets/0aa48c2f-b640-4765-a2ea-31ef7cfaf49b)
+## Screenshots
+
+<img src="https://github.com/user-attachments/assets/3c656e64-d562-4e6b-95fd-b8379ff083b7" width="400" alt="Screenshot 1">
+<img src="https://github.com/user-attachments/assets/0aa48c2f-b640-4765-a2ea-31ef7cfaf49b" width="400" alt="Screenshot 2">
 
 
 
