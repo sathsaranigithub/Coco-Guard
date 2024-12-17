@@ -60,8 +60,36 @@ Users can save the parameters and predictions for both yield and demand in dedic
 These records allow farmers to analyze trends and make better decisions for future farming and trade activities.
 
 ---
-## Screen shots
+## Screenshots
 
+<img src="https://github.com/user-attachments/assets/023f7c16-d8f1-4fea-ae48-6f2ac5d3a3df" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/0aa48c2f-b640-4765-a2ea-31ef7cfaf49b" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/f0632e2b-3738-4b37-b686-73a401b73c4e" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/61c4bc7f-5b09-4147-9f20-6b0965f482a2" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/63abda8c-fb9d-4236-88be-4ffa6e694cc9" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/994b5177-9446-482e-b5d2-3b243b3b74ad" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/639acc52-de1b-4a47-946e-8acf473faae3" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/bdfd0521-529b-41a8-a479-6de55a7a151e" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/bd93f222-1d50-4cb1-9983-3bc4b4aef1fb" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/1383fb63-ba26-4917-895b-144a655f9490" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/4927b98b-e064-474f-b125-3b82c2c092fb" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/f68e278b-95c1-4eca-8e29-c57e56020662" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/d27bb1f0-31f0-4cc4-b20d-c61b528b4978" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/c23481a1-7045-47f9-836b-4a8f3b543478" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/e4492800-b7b7-4168-94d2-280479a53e42" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/d1d329c5-6721-4087-94fd-3c1340e77064" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/c57838c9-9b3b-4aca-840d-f01ffccab421" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/675f709a-a844-42eb-bffc-324a2d441ffb" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/f0ee1afa-87f8-41d8-99b7-f7cdc9b57e7a" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/8b84b9f0-a674-4264-a719-7e86a998cc41" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/062ed276-0791-43bd-b999-b3fee938a29b" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/e1e9b9c9-d09d-41e6-9a71-1dd3c7d3af94" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/797d8f25-d693-4c60-aafe-bb33bdaf5fbd" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/c8a95f49-a882-465f-b108-121ca6992602" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/d48f81b0-b5a1-487c-b5ea-d818616112c9" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/1b3920c7-43b2-43f4-b5cf-eb51b5c97610" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/349e443d-907d-4279-b065-5e5fc073d45d" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/c50faa1a-ae51-46a4-b3ba-0b210f6f8ea3" width="700" alt="Screenshot 2">
 
 ## About Me
 
