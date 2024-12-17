@@ -10,17 +10,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.example.cocoguard.auth.LoginPage
-import org.example.cocoguard.screens.HomeScreen
-import org.example.cocoguard.screens.OnboardScreen
-import org.example.cocoguard.screens.disease.ImageUploadScreen
-import org.example.cocoguard.screens.forecasting.ForecastingQuestionScreen
-import org.example.cocoguard.screens.forecasting.ForecastingRecordScreen
-import org.example.cocoguard.screens.yield.YieldQuestionScreen
-import org.example.cocoguard.screens.yield.YieldRecordScreen
+import org.example.cocoguard.view.auth.LoginPage
+import org.example.cocoguard.view.HomeScreen
+import org.example.cocoguard.view.OnboardScreen
+import org.example.cocoguard.view.disease.ImageUploadScreen
+import org.example.cocoguard.view.forecasting.ForecastingQuestionScreen
+import org.example.cocoguard.view.forecasting.ForecastingRecordScreen
+import org.example.cocoguard.view.yield.YieldQuestionScreen
+import org.example.cocoguard.view.yield.YieldRecordScreen
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import org.example.cocoguard.screens.disease.DiseaseTreatmentScreen
+import org.example.cocoguard.view.disease.DiseaseTreatmentScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController) {

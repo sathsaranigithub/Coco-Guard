@@ -59,88 +59,8 @@ fun main() = application {
 
     }
 }
-//    ) {
-//        val repository = FirestoreRepository()
-//        val authService = AuthService(repository)
-//        val coroutineScope = CoroutineScope(Dispatchers.IO)
-//        var isLoading by remember { mutableStateOf(false) } // Track loading state
-//        var message by remember { mutableStateOf("") } // Track success/error messages
-//
-//        Column(
-//            modifier = Modifier.fillMaxSize().padding(16.dp),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            SignInScreen(
-//                authService = authService,
-//                isLoading = isLoading,
-//                message = message,
-//                onSignIn = { email, password ->
-//                    if (email.isNotBlank() && password.isNotBlank()) {
-//                        coroutineScope.launch {
-//                            try {
-//                                isLoading = true // Show loading
-//                                message = ""
-//                                val isAuthenticated = authService.signIn(email, password)
-//                                withContext(Dispatchers.Main) {
-//                                    isLoading = false // Hide loading
-//                                    message = if (isAuthenticated) {
-//                                        "Sign-In Successful!"
-//                                    } else {
-//                                        "Invalid Email or Password"
-//                                    }
-//                                }
-//                            } catch (e: Exception) {
-//                                withContext(Dispatchers.Main) {
-//                                    isLoading = false // Hide loading
-//                                    message = "Error: ${e.message}" // Error message
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        message = "Please fill in both fields." // Validation message
-//                    }
-//                }
-//            )
-//            SaveUserScreen(
-//                isLoading = isLoading,
-//                message = message,
-//                onSave = { email, password ->
-//                    if (email.isNotBlank() && password.isNotBlank()) {
-//                        coroutineScope.launch {
-//                            try {
-//                                isLoading = true // Show loading
-//                                message = ""
-//                                val encryptedPassword = encryptPassword(password)
-//                                val result = repository.addUser(User(email, encryptedPassword))
-//                                withContext(Dispatchers.Main) {
-//                                    isLoading = false // Hide loading
-//                                    if (result.isSuccess) {
-//                                        message = "User added successfully!" // Success message
-//                                    } else {
-//                                        message = "Error: ${result.exceptionOrNull()?.message}" // Error message
-//                                    }
-//                                }
-//                            } catch (e: Exception) {
-//                                withContext(Dispatchers.Main) {
-//                                    isLoading = false // Hide loading
-//                                    message = "Error: ${e.message}" // Error message
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        message = "Please fill in both fields." // Validation message
-//                    }
-//                }
-//            )
-//        }
-//    }
 
 
 
 
-fun encryptPassword(password: String): String {
-    val messageDigest = MessageDigest.getInstance("SHA-256")
-    val hashedBytes = messageDigest.digest(password.toByteArray())
-    return hashedBytes.joinToString("") { "%02x".format(it) }
-}
+
