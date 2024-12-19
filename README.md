@@ -101,6 +101,19 @@ These records allow farmers to analyze trends and make better decisions for futu
 <img src="https://github.com/user-attachments/assets/3d5d1fa8-266c-4aa3-a2a3-97df67b5a090" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <img src="https://github.com/user-attachments/assets/035e6b13-ff5b-4c56-93f9-a33918200d20" width="250">
 <img src="https://github.com/user-attachments/assets/deab3810-15c7-4775-b8c2-39e93f384249" width="700" alt="Screenshot 2">
+## Libraries Used
+
+| **Use**                  | **Source**                              |
+|--------------------------|------------------------------------------|
+| Navigation               | `org.jetbrains.androidx.navigation:navigation-compose` (2.7.0-alpha07) |
+| State Management         | `androidx.lifecycle.viewmodel`, `androidx.lifecycle.runtime.compose` |
+| UI Components            | `compose.runtime`, `compose.foundation`, `compose.material`, `compose.ui`, `compose.components.resources`, `compose.components.uiToolingPreview` |
+| File Picker              | MohamedRejeb's Calf File Picker (`calf-file-picker` 0.5.3, `calf-file-picker-coil` 0.5.1) |
+| Image Loading            | Coil (`io.coil-kt.coil3:coil-compose` 3.0.0-alpha08) |
+| HTTP Client/Serialization| Ktor (`ktor-client-core`, `ktor-client-logging`, `ktor-client-content-negotiation`, `ktor-client-serialization`, `ktor-serialization-kotlinx-json`) |
+| JSON Handling            | `org.jetbrains.kotlinx:kotlinx-serialization-json` (1.6.0), `org.json:json` (20210307) |
+| Firebase Firestore       | GitLive Firebase (`libs.gitlive.firebase.firestore`) |
+| Multithreading           | Kotlin Coroutines (`libs.kotlinx.coroutines.swing`) |
 
 
 ## About Me
