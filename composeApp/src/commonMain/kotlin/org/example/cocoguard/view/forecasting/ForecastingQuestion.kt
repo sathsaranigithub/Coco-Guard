@@ -117,7 +117,6 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
                     Currency_Exchange_Rates_LKR_to_USD = currencyExchangeRate.toDouble(),
                     Competitor_Countries_Production_kg = competitorCountriesProduction.toDouble()
                 )
-                // Log the request data
                 println("Submitting data: $request")
                 val response = forecasting.fetchDemandPrediction(client, request)
                 if (response != null) {
@@ -137,8 +136,8 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
     Column(modifier = Modifier.fillMaxSize()) {
         HeaderCardTwo(
             navController = navController,
-            title = "AI-Powered Coconut\n",
-            subtitle = "Demand Forecasting Prediction",
+            title = "Coconut Demand\n",
+            subtitle = "Forecasting Prediction",
             description = "Leveraging AI for coconut demand forecasting provides accurate, data-driven insights into market trends",
             buttonText = "Forecast Record",
             buttonAction = { navController.navigate("forecastingRecord/$email") },
@@ -146,7 +145,6 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
             isPressed = isPressed
         )
         Spacer(modifier = Modifier.height(16.dp))
-        // Questions Section
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -163,7 +161,7 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
             }
             item {
                 DropdownQuestion(
-                    question = "Which region are you planning to export to??",
+                    question = "Which region are you planning to export to?",
                     options = listOf("USA", "Sri Lanka", "UK", "Europe","Middle East"),
                     hint = "Select answer",
                     onSelect = { region = it }
@@ -179,7 +177,7 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
             }
             item {
                 TextFieldQuestion(
-                    question = "What is the coconut export volume (in kg) for the selected month and region?",
+                    question = "What is the domestic coconut consumption (in kg) for the selected month and region?",
                     hint = "e.g. 120000",
                     value = domesticCoconutConsumption,
                     onValueChange = { domesticCoconutConsumption = it }
@@ -229,7 +227,6 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Validation message on the start of the row
                     if (showValidationError) {
                         Text(
                             text = validationErrorMessage,
@@ -237,9 +234,9 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
                             fontSize = 14.sp,
                             modifier = Modifier
                                 .padding(16.dp)
-                                .background(Color(0x80FFCECA)) // Light red background for emphasis
+                                .background(Color(0x80FFCECA))
                                 .padding(8.dp)
-                                .weight(1f) // Take up available space
+                                .weight(1f)
                         )
                     }
                     Button(
@@ -261,7 +258,6 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
             onDismiss = { showDialog = false },
             onSave = {
                 val email = email
-                // Create an instance of the Demand class
                 val demand = Demand(
                     month = month,
                     region = region,
@@ -274,9 +270,7 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
                     competitorCountriesProduction = competitorCountriesProduction,
                     predictionResult = predictionResult
                 )
-                // Log the demand data for debugging
                 println("Saving demand data: $demand")
-                // Save the demand data using Firestore or other persistence methods
                 coroutineScope.launch {
                     repository.addDemand(email,demand)
                 }
@@ -287,7 +281,7 @@ fun ForecastingQuestionScreen(navController: NavHostController, email: String) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0x88000000)), // Semi-transparent overlay
+                .background(Color(0x88000000)),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(

@@ -1,5 +1,4 @@
 package org.example.cocoguard.model
-
 data class Demand(
     var month: String = "",
     var region: String = "",

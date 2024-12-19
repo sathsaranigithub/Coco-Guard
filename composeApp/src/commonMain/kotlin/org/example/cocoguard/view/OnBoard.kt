@@ -29,14 +29,12 @@ fun OnboardScreen(navController: NavController) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Background Image
             Image(
                 painter = painterResource(Res.drawable.mainimage),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            // Main Heading Text placed at the top start
             Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
@@ -48,7 +46,6 @@ fun OnboardScreen(navController: NavController) {
                     modifier = Modifier
                         .padding(bottom = 8.dp, start = 15.dp)
                 )
-                // Subheading Text
                 Text(
                     text = "Empowering coconut farmers with cutting-edge AI technology",
                     style = subHeadingTextStyle(),
@@ -56,7 +53,6 @@ fun OnboardScreen(navController: NavController) {
                         .width(330.dp)
                         .padding(top = 20.dp, start = 15.dp)
                 )
-                // "Get Started" Button
                 Button(
                     onClick = {
                         navController.navigate("login")

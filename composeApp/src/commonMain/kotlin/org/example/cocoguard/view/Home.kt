@@ -38,7 +38,6 @@ import org.example.cocoguard.component.ImageCard
 import org.example.cocoguard.component.ImageSlider
 import org.example.cocoguard.ui.theme.workSansBoldFontFamily
 
-
 @Composable
 fun HomeScreen(navController: NavController, loggedInEmail: String) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -61,7 +60,7 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                     modifier = Modifier
                         .size(40.dp)
                         .background(
-                            color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                            color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent,
                             shape = CircleShape
                         )
                 ) {
@@ -76,14 +75,13 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "logout", tint = Color.White)
                     }
                 }
-                // Title
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(color = Color(0xFF4CAF50))) {
-                            append("AI Powered\n")
+                            append("AI Powered ")
                         }
                         withStyle(style = SpanStyle(color = Color.White)) {
-                            append("For Coconut\nFarming")
+                            append("For Coconut Farming")
                         }
                     },
                     fontSize = 30.sp,
@@ -119,13 +117,11 @@ fun HomeScreen(navController: NavController, loggedInEmail: String) {
                 }
             }
         }
-        // List of images, titles, and descriptions
         val cardData = listOf(
             Pair(Triple(Res.drawable.cardone, "Disease Detection", "Image processing for real-time coconut tree diseases identification and recommended treatment for disease"), "imageUpload/$loggedInEmail"),
             Pair(Triple(Res.drawable.cardtwo, "Demand Forecasting", "Detect coconut diseases early with AI-driven tools."), "forecastingQuestion/$loggedInEmail"),
             Pair(Triple(Res.drawable.cardthree, "Yield Prediction", "Predict coconut yield accurately to enhance productivity."), "yieldQuestion/$loggedInEmail")
         )
-        // Scrollable content with image cards
         LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f).padding(top = 16.dp)) {
             items(cardData.size) { index ->
                 val (cardInfo, route) = cardData[index]

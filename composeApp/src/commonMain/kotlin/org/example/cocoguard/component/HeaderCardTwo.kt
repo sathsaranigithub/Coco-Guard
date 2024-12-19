@@ -64,7 +64,7 @@ fun HeaderCardTwo(
                 modifier = Modifier
                     .size(38.dp)
                     .background(
-                        color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent, // Change background on press
+                        color = if (isPressed) Color(0xFF4CAF50) else Color.Transparent,
                         shape = CircleShape
                     )
             ) {
@@ -79,7 +79,6 @@ fun HeaderCardTwo(
                     )
                 }
             }
-            // Title
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = Color.White)) {
@@ -94,7 +93,6 @@ fun HeaderCardTwo(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 10.dp)
             )
-            // Description and Button
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

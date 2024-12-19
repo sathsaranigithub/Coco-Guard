@@ -10,7 +10,6 @@ import org.example.cocoguard.model.DemandPredictionRequest
 import org.example.cocoguard.view.forecasting.DemandPredictionResponse
 
 class Forecasting {
-
     suspend fun fetchDemandPrediction(client: HttpClient, request: DemandPredictionRequest): DemandPredictionResponse? {
         return try {
             client.post("https://asia-south1-plucky-pointer-443915-u7.cloudfunctions.net/coconutdemandforecasting") {
@@ -22,5 +21,4 @@ class Forecasting {
             null
         }
     }
-
 }

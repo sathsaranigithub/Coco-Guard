@@ -27,7 +27,6 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
         elevation = 4.dp
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            // Image taking half of the screen width
             Image(
                 painter = painterResource(imageRes),
                 contentDescription = null,
@@ -36,7 +35,6 @@ fun ImageCard(imageRes: DrawableResource, title: String, description: String,onC
                     .height(180.dp)
                     .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
             )
-            // Text and Button content taking the other half
             Column(
                 modifier = Modifier
                     .weight(0.5f)

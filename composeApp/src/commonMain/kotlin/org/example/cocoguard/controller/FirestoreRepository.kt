@@ -41,11 +41,10 @@ class FirestoreRepository {
         return try {
             // Reference the user's document using email as the document ID in the demand_forecasting collection
             val documentRef = db.collection("demand_forecasting")
-                .document(userEmail) // Use the user's email as the document ID
-            // Save the demand result under the 'demand' subcollection of the user's document
+                .document(userEmail)
             val document = documentRef
                 .collection("demand")
-                .add(demand) // Add the demand document
+                .add(demand)
                 .await()
             Result.success(document.id)
         } catch (e: Exception) {
@@ -54,13 +53,12 @@ class FirestoreRepository {
     }
     suspend fun addYield(userEmail: String, yield: Yield): Result<String> {
         return try {
-            // Reference the user's document using email as the document ID in the demand_forecasting collection
+            // Reference the user's document using email as the document ID in the yield collection
             val documentRef = db.collection("yield_recode")
-                .document(userEmail) // Use the user's email as the document ID
-            // Save the demand result under the 'demand' subcollection of the user's document
+                .document(userEmail)
             val document = documentRef
                 .collection("yield")
-                .add(yield) // Add the demand document
+                .add(yield)
                 .await()
             Result.success(document.id)
         } catch (e: Exception) {
@@ -71,16 +69,14 @@ class FirestoreRepository {
         return try {
             // Reference the document in the treatment_recode collection
             val documentRef = db.collection("treatment_recode")
-                .document(userEmail) // Use the user's email as the document ID
-            // Save the treatment details as a single field in the document
+                .document(userEmail)
             documentRef.set(treatment).await()
-            Result.success(documentRef.id) // Return the ID (email) of the document
+            Result.success(documentRef.id)
         } catch (e: Exception) {
             println("FirestoreError: ${e.localizedMessage}")
             Result.failure(e)
         }
     }
-    // Retrieve Demands for a User
     suspend fun getDemands(userEmail: String): Result<List<Demand>> {
         return try {
             val snapshot = db.collection("demand_forecasting")
@@ -119,7 +115,6 @@ class FirestoreRepository {
         return try {
             val documentRef = db.collection("treatment_recode").document(userEmail)
             val snapshot = documentRef.get().await()
-
             if (snapshot.exists()) {
                 val treatment = snapshot.toObject(Treatment::class.java)
                 Result.success(treatment?.text ?: "No treatment found.")

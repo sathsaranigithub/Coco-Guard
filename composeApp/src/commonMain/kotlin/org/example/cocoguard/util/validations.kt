@@ -24,7 +24,6 @@ fun validateInputs(
         else -> Pair(true, "")
     }
 }
-
 fun validateInputsyield(
     soilPH: String,
     humidity: String,

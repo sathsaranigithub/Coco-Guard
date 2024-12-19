@@ -32,7 +32,7 @@ fun DiseaseTreatmentScreen(navController: NavController, userEmail: String) {
     var treatmentText by remember { mutableStateOf("Fetching treatment data...") }
     var loading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
-    // Fetch treatment data when the screen is displayed
+
     LaunchedEffect(userEmail) {
         try {
             loading = true

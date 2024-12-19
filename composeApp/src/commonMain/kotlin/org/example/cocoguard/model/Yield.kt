@@ -1,5 +1,4 @@
 package org.example.cocoguard.model
-
 data class Yield(
     var soilType: String = "",
     var soilPH: String = "",
@@ -9,6 +8,4 @@ data class Yield(
     var month: String = "",
     var plantAge: String = "",
     var predictionResult: String = ""
-
-
 )

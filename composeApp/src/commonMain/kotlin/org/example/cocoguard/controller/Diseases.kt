@@ -92,19 +92,17 @@ class Diseases {
                     setBody(requestBody)
                 }
                 val responseText = response.bodyAsText()
-                println("GeminiAPIResponse: $responseText") // Debug log
+                println("GeminiAPIResponse: $responseText")
                 // Parse the JSON response
                 val json = Json { ignoreUnknownKeys = true }
                 val geminiResponse = json.decodeFromString<GeminiResponse>(responseText)
                 // Extract the text content
                 val textContent = geminiResponse.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
                 textContent?.also { println("Extracted Text: $it") }
-                // If text is extracted, save it to Firebase
                 if (textContent != null) {
                     val treatment = Treatment(text = textContent)
-                    repository.addTreatment(email, treatment) // Save using the repository
+                    repository.addTreatment(email, treatment)
                     println("Saved treatment to Firestore for email: $email")
-                    // Navigate to diseaseTreatmentScreen
                     withContext(Dispatchers.Main) {
                         navController.navigate("diseaseTreatmentScreen/$email")
                     }
@@ -114,10 +112,10 @@ class Diseases {
                     return@withContext "No text found in API response"
                 }
             } catch (e: Exception) {
-                println("GeminiAPIError: ${e.localizedMessage}") // Debug error log
+                println("GeminiAPIError: ${e.localizedMessage}")
                 return@withContext "Error: ${e.localizedMessage}"
             } finally {
-                client.close() // Ensure the client is closed
+                client.close()
             }
         }
     }

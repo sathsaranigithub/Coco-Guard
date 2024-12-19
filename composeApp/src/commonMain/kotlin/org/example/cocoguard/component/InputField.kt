@@ -23,9 +23,9 @@ fun InputField(
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
             textColor = Color.Black,
-            focusedLabelColor = Color(0xFF4CAF50), // Color when focused
-            unfocusedLabelColor = Color(0xFF4CAF50), // Color when not focused
-            focusedIndicatorColor = Color(0xFF4CAF50), // Underline color when focused
+            focusedLabelColor = Color(0xFF4CAF50),
+            unfocusedLabelColor = Color(0xFF4CAF50),
+            focusedIndicatorColor = Color(0xFF4CAF50),
             unfocusedIndicatorColor = Color.Gray
         ),
         modifier = Modifier.fillMaxWidth()

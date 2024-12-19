@@ -11,7 +11,6 @@ import coco_guard.composeapp.generated.resources.lemonada
 import coco_guard.composeapp.generated.resources.worksansbold
 import coco_guard.composeapp.generated.resources.worksansmedium
 import coco_guard.composeapp.generated.resources.worksanssemibold
-
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 
@@ -38,7 +37,6 @@ fun workSansSemiBoldFontFamily() = FontFamily(
 fun workSansFontFamily() = FontFamily(
     Font(Res.font.worksansmedium, FontWeight.SemiBold)
 )
-
 @Composable
 fun headingTextStyle() = TextStyle(
     fontFamily = lemonadaFontFamily(),
@@ -46,7 +44,6 @@ fun headingTextStyle() = TextStyle(
     fontWeight = FontWeight.Bold,
     color = Color(0xFFBAEC6F)
 )
-
 @Composable
 fun subHeadingTextStyle() = TextStyle(
     fontFamily = lemonadaFontFamily(),
@@ -56,33 +53,3 @@ fun subHeadingTextStyle() = TextStyle(
 
 )
 
-@Composable
-fun loginHeadTextStyle() = TextStyle(
-    fontFamily = workSansBoldFontFamily(),
-    fontSize = 32.sp,
-    fontWeight = FontWeight.Bold,
-    color = Color.Black
-)
-
-@Composable
-fun subHeadTextStyle() = TextStyle(
-    fontFamily = workSansSemiBoldFontFamily(),
-    fontSize = 18.sp,
-    fontWeight = FontWeight.Normal,
-    color = Color.Black
-
-)
-@Composable
-fun subTextStyle() = TextStyle(
-    fontFamily = workSansFontFamily(),
-    fontSize = 18.sp,
-    fontWeight = FontWeight.Bold,
-    color = Color.Black
-
-)
-
-@Composable
-fun buttonTextStyle() = TextStyle(
-    fontSize = 18.sp,
-    color = Color.White
-)

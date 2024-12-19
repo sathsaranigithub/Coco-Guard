@@ -2,7 +2,6 @@ package org.example.cocoguard.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
 @Serializable
 data class DemandPredictionRequest(
     @SerialName("Month")

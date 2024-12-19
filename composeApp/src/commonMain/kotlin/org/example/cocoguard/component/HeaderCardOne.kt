@@ -84,7 +84,6 @@ fun HeaderCardOne(
                     )
                 }
             }
-            // Title
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = Color.White)) {

@@ -9,9 +9,7 @@ import io.ktor.http.contentType
 import org.example.cocoguard.model.YieldPredictionRequest
 import org.example.cocoguard.view.yield.YieldPredictionResponse
 
-
 class YieldFeature {
-
     suspend fun fetchYieldPrediction(client: HttpClient, request: YieldPredictionRequest): YieldPredictionResponse? {
         return try {
             client.post("https://asia-south1-plucky-pointer-443915-u7.cloudfunctions.net/coconut-yieldprediction") {
@@ -23,6 +21,4 @@ class YieldFeature {
             null
         }
     }
-
-
 }

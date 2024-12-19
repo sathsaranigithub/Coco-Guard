@@ -1,7 +1,6 @@
 package org.example.cocoguard.model
 
 import kotlinx.serialization.Serializable
-
 @Serializable
 data class YieldPredictionRequest(
     val soil_type_input: String,

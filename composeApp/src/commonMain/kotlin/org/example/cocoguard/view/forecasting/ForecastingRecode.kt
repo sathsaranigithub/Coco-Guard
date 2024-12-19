@@ -53,7 +53,6 @@ fun ForecastingRecordScreen(navController: NavController, userEmail: String) {
             }
         )
         Spacer(modifier = Modifier.height(10.dp))
-        // Display Loading or Error
         if (loading) {
             Box(
                 modifier = Modifier

@@ -33,7 +33,7 @@ fun ImageSlider() {
     )
     val pageState = rememberPagerState(pageCount = { imagesList.size })
     val coroutineScope = rememberCoroutineScope()
-    // Auto-scroll
+
     LaunchedEffect(Unit) {
         while (true) {
             delay(3000)
