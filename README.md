@@ -128,7 +128,8 @@ You can run your application using an emulator or an Android mobile device. [Lea
 2. Click the **Run** icon to run the application.
 3. If you are using an Android mobile device, I will provide you with the APK file. You can download it onto your mobile phone and use the app.
 
-<img src="https://github.com/user-attachments/assets/437bd5f2-e292-45eb-b577-7ba470c42a8b" width="100" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/21bb6043-e706-4a79-9ebd-c54a0488684f" width="100" alt="Screenshot 2">
+
 [Download APK](https://drive.google.com/file/d/1DrHVbaz_9AZXDIct93HYp1XGM6u9cNvm/view?usp=sharing)
 
 ## About Me
