@@ -116,6 +116,8 @@ These records allow farmers to analyze trends and make better decisions for futu
 | Firebase Firestore       | GitLive Firebase (`libs.gitlive.firebase.firestore`) |
 | Multithreading           | Kotlin Coroutines (`libs.kotlinx.coroutines.swing`) |
 
+## Architecture diagram (MVC)
+<img src="https://github.com/user-attachments/assets/09ec27f9-a9b7-408a-96d2-993337b1e9de" width="700" alt="Screenshot 2">
 
 ## About Me
 
