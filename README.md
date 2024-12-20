@@ -129,6 +129,8 @@ You can run your application using an emulator or an Android mobile device. [Lea
 3. If you are using an Android mobile device, I will provide you with the APK file. You can download it onto your mobile phone and use the app.
 
 
+[Download APK](https://drive.google.com/file/d/1DrHVbaz_9AZXDIct93HYp1XGM6u9cNvm/view?usp=sharing)
+
 ## About Me
 
 I am an undergraduate student pursuing a **Computer Science Special Degree** at **NSBM Green University, Sri Lanka**. I specialize in full-stack web and mobile development as well as AI/ML development. During my one-year internship at an IT company, I gained hands-on experience in building applications and developing AI/ML models. My passion lies in creating innovative solutions that blend technology with real-world challenges, such as the Coco Guard app, which aims to empower farmers through intelligent tools.
