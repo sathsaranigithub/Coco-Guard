@@ -128,10 +128,13 @@ You can run your application using an emulator or an Android mobile device. [Lea
 2. Click the **Run** icon to run the application.
 3. If you are using an Android mobile device, I will provide you with the APK file. You can download it onto your mobile phone and use the app.
 
-<img src="https://github.com/user-attachments/assets/21bb6043-e706-4a79-9ebd-c54a0488684f" width="100" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/21bb6043-e706-4a79-9ebd-c54a0488684f" width="100" height="100" alt="Screenshot 2">
 
 [Download APK](https://drive.google.com/file/d/1DrHVbaz_9AZXDIct93HYp1XGM6u9cNvm/view?usp=sharing)                <img src="https://github.com/user-attachments/assets/af2b58c1-6f38-41cf-b9bc-5c8f7a6e752c" width="100" alt="Screenshot 2">    Install apk to your android mobile   <img src="https://github.com/user-attachments/assets/cf7453e4-23ad-4ab1-8bb4-7c2d2abbaba6" width="200" alt="Screenshot 2">
 
+<img src="https://github.com/user-attachments/assets/21bb6043-e706-4a79-9ebd-c54a0488684f" width="100" height="100" alt="Screenshot 2">
+
+[Download coconut tree disease test images](https://drive.google.com/drive/folders/1bEGF_d7O4XEdt0RVNIk3yYb7x-6uWEtc?usp=sharing) 
 
 ## About Me
 
