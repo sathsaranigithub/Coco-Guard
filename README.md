@@ -119,6 +119,15 @@ These records allow farmers to analyze trends and make better decisions for futu
 ## Architecture diagram (MVC)
 <img src="https://github.com/user-attachments/assets/4a81d5a2-b4f2-43c3-b4bd-908281371a8f" width="1000" alt="Screenshot 2">
 
+## Set up environment
+
+###  How to Run Your Android Application
+You can run your application using an emulator or an Android mobile device. [Learn more](https://developer.android.com/studio/run/managing-avds#createavd)
+
+1. In the list of run configurations, select **Android App** and choose a device.
+2. Click the **Run** icon to run the application.
+3. If you are using an Android mobile device, I will provide you with the APK file. You can download it onto your mobile phone and use the app.
+
 
 ## About Me
 
