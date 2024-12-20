@@ -117,7 +117,8 @@ These records allow farmers to analyze trends and make better decisions for futu
 | Multithreading           | Kotlin Coroutines (`libs.kotlinx.coroutines.swing`) |
 
 ## Architecture diagram (MVC)
-<img src="https://github.com/user-attachments/assets/09ec27f9-a9b7-408a-96d2-993337b1e9de" width="700" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/4a81d5a2-b4f2-43c3-b4bd-908281371a8f" width="1000" alt="Screenshot 2">
+
 
 ## About Me
 
