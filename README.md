@@ -140,7 +140,7 @@ You can run your application using an emulator or an Android mobile device. [Lea
 [Download coconut tree disease test images](https://drive.google.com/drive/folders/1bEGF_d7O4XEdt0RVNIk3yYb7x-6uWEtc?usp=sharing) 
 
 ###  How to Run Desktop Application
-Go to edit configuration and add the following image command and the click run icon
+Go to edit configuration and add the following image command(composeApp:run) and the click run icon
 
 <img src="https://github.com/user-attachments/assets/f4e191f7-5f47-48f2-990c-4303afd733fd" width="400"  alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/c0affceb-ff16-4182-a3ce-589ef707ca2e" width="200"  alt="Screenshot 2">
