@@ -14,6 +14,8 @@ The purpose of the Coco Guard app is to empower farmers with intelligent tools f
 
 ## Demo video Android & Desktop
 
+[![Demo Video](https://github.com/user-attachments/assets/50c201fd-91f3-4ca1-9bc3-0e4157b04c46 )](https://drive.google.com/file/d/1BrAg97vMnwt3mC2tjTFKDJFlfmmvkYRq/view?usp=sharing)
+
 
 ## Features
 
