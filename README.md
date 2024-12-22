@@ -138,6 +138,11 @@ You can run your application using an emulator or an Android mobile device. [Lea
 
 [Download coconut tree disease test images](https://drive.google.com/drive/folders/1bEGF_d7O4XEdt0RVNIk3yYb7x-6uWEtc?usp=sharing) 
 
+###  How to Run Desktop Application
+Go to edit configuration and add folowing image command
+<img src="https://github.com/user-attachments/assets/f4e191f7-5f47-48f2-990c-4303afd733fd" width="400" height="85" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/c0affceb-ff16-4182-a3ce-589ef707ca2e" width="200" height="85" alt="Screenshot 2">
+
 ## About Me
 
 I am an undergraduate student pursuing a **Computer Science Special Degree** at **NSBM Green University, Sri Lanka**. I specialize in full-stack web and mobile development as well as AI/ML development. During my one-year internship at an IT company, I gained hands-on experience in building applications and developing AI/ML models. My passion lies in creating innovative solutions that blend technology with real-world challenges, such as the Coco Guard app, which aims to empower farmers through intelligent tools.
