@@ -145,6 +145,8 @@ Go to edit configuration and add the following image command(composeApp:run) and
 <img src="https://github.com/user-attachments/assets/f4e191f7-5f47-48f2-990c-4303afd733fd" width="400"  alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/c0affceb-ff16-4182-a3ce-589ef707ca2e" width="200"  alt="Screenshot 2">
 
+[Download coconut tree disease test images](https://drive.google.com/drive/folders/1bEGF_d7O4XEdt0RVNIk3yYb7x-6uWEtc?usp=sharing) 
+
 ## About Me
 
 I am D. Sewmini Sathsarani, a 4th-year undergraduate student pursuing a Computer Science Special Degree at NSBM Green University, Sri Lanka. I specialize in full-stack web and mobile development as well as AI/ML development. During my one-year internship at an IT company, I gained hands-on experience in building applications and developing AI/ML models.
