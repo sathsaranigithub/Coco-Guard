@@ -85,7 +85,8 @@ These records allow farmers to analyze trends and make better decisions for futu
 <img src="https://github.com/user-attachments/assets/f68e278b-95c1-4eca-8e29-c57e56020662" width="700" alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/d27bb1f0-31f0-4cc4-b20d-c61b528b4978" width="700" alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/c23481a1-7045-47f9-836b-4a8f3b543478" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="https://github.com/user-attachments/assets/e4492800-b7b7-4168-94d2-280479a53e42" width="250" alt="Screenshot 2">
+<img src="https://github.com/user-attachments/assets/e4492800-b7b7-4168-94d2-280479a53e42" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/96434a0b-fd2c-4487-8808-71139ba63f34" width="250" alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/d1d329c5-6721-4087-94fd-3c1340e77064" width="700" alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/c57838c9-9b3b-4aca-840d-f01ffccab421" width="700" alt="Screenshot 2">
 <img src="https://github.com/user-attachments/assets/675f709a-a844-42eb-bffc-324a2d441ffb" width="250" alt="Screenshot 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
