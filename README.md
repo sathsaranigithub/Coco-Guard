@@ -149,7 +149,6 @@ Go to edit configuration and add the following image command(composeApp:run) and
 
 ## About Me
 
-I am D. Sewmini Sathsarani, a 4th-year undergraduate student pursuing a Computer Science Special Degree at NSBM Green University, Sri Lanka. I specialize in full-stack web(react,next js) and mobile development(flutter,android java+kotlin) as well as AI/ML development. During my one-year internship at an IT company, I gained hands-on experience in building applications and developing AI/ML models.
-My passion lies in creating innovative solutions that blend technology with real-world challenges, such as the Coco Guard app, which aims to empower farmers through intelligent tools. I am driven by a commitment to using technology to make a meaningful impact.
+I am D. Sewmini Sathsarani, a 4th-year undergraduate student pursuing a Computer Science Special Degree at NSBM Green University, Sri Lanka. I specialize in full-stack web(react,next js) and mobile development(flutter,android java+kotlin) as well as AI/ML development.My passion lies in creating innovative solutions that blend technology with real-world challenges, such as the Coco Guard app, which aims to empower farmers through intelligent tools. I am driven by a commitment to using technology to make a meaningful impact.
 Feel free to reach out to me via email: sewminisathsarani1@gmail.com.
 
