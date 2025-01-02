@@ -3,7 +3,7 @@
 # Coco Guard
 
 ## Purpose 
-The purpose of the Coco Guard app is to empower farmers with intelligent tools for identifying coconut tree diseases, forecasting coconut demand, and predicting coconut yield, enabling data-driven decision-making to optimize farming and trade practices. This app is motivated by the current challenges in Sri Lanka, where coconut harvesting is declining due to diseases and rising coconut prices, impacting both local consumption and export opportunities. By providing advanced solutions, Coco Guard aims to help develop the export market, support Sri Lanka's economy, and offer a valuable resource for coconut farmers not only in Sri Lanka but also worldwide.
+The purpose of the Coco Guard app is to empower farmers with intelligent tools for identifying coconut tree diseases, forecasting coconut demand, and predicting coconut yield, enabling data-driven decision-making to optimize farming and trade practices. In Sri Lanka, the main exports are tea, rubber, and coconut. However, coconut farmers often face challenges with coconut tree diseases. Additionally, new farmers lack sufficient knowledge about diseases, demand forecasting, and yield prediction for coconuts. This app is motivated by the current challenges in Sri Lanka, where coconut harvesting is declining and coconut prices are rising due to diseases, impacting both local consumption and export opportunities. By providing advanced solutions, Coco Guard aims to help develop the export market, support Sri Lanka's economy, and offer a valuable resource for coconut farmers not only in Sri Lanka but also worldwide.
 
 ## Technologies used
 - **Firebase: For login, registration, saving yield records, and storing demand forecasting data.**
